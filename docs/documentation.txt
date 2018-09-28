@@ -1,0 +1,4 @@
+Document all progress on any feature relative to the project here.
+AREA class
+  -class variables
+    -transitions()
