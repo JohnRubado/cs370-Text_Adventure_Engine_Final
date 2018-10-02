@@ -4,11 +4,24 @@ from packages.player.player import player;
 from packages.item.item import item;
 
 class world:
-    NORTH = 0;
-    EAST = 1;
-    SOUTH = 2;
-    WEST = 3;
 
 
     #AUTHOR METHODS
-    def __init__(self):
+    def __init__(self, description = "New World", player = "Player One"):
+        self.description = description
+        self.player = player
+        self.areas = []
+
+    def newArea(self, name, description):
+        if not self.areaExists(name):
+            area = Area.newArea(self, name, description)
+            self.areas.append(area)
+
+        
+
+    def areaExists(self, name):
+        for area in self.areas:
+            if area.name == name:
+                return True
+
+        return False
