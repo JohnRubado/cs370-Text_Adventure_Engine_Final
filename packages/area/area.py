@@ -9,7 +9,7 @@ class Area:
         self.name = name
         self.items = []
         self.transitions = []
-        self.description = description
+        
 
     def newItem(self, item):
         self.items.append(item)
