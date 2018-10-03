@@ -143,6 +143,8 @@ class World:
                 return True
         return False
 
+    #checks to see if direction given is a valid direction
+    #returns true if valid false otherwise
     def validDirection(self, direction):
         validDirection = False;
         direction =direction.lower();
