@@ -1,7 +1,3 @@
-from packages.item import item;
-from packages.direction.direction import direction;
-
-
 class Area:
 
 

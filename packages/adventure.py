@@ -1,1 +1,1 @@
-from packages.world.world import world;
+from packages.world.world import World;
