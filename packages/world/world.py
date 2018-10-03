@@ -27,7 +27,7 @@ class World:
     #Returns the area object to the author.
     def newArea(self, name, description):
         if not self.areaExists(name):
-            area = Area.newArea(self, name, description)
+            area = Area(name, description)
             self.areas.append(area)
 
         return self.getArea(name)
@@ -174,3 +174,9 @@ class World:
     #returns the result string
     def trimDirectionString(self, direction):
         return "".join(direction.split())
+
+    def printWorld(self):
+        print(self.description)
+        print("Areas: ")
+        for area in self.areas:
+            Area.printArea(area, area.name)
