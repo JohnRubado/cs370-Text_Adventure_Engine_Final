@@ -11,5 +11,7 @@ class Area:
         self.transitions = []
         self.description = description
 
-    def newItem(self, item):
-        self.items.append(item)
+
+    #Adds transition to the list of transitions
+    def newTransition(self, transition):
+        transitions.append(transition)
