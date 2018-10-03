@@ -10,4 +10,4 @@ class Area:
 
     #Adds transition to the list of transitions
     def newTransition(self, transition):
-        transitions.append(transition)
+        self.transitions.append(transition)
