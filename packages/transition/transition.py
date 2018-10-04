@@ -11,3 +11,6 @@ class transition:
         self.imPassable = ""
         self.description = description
         self.requirements = []
+
+    def printTrans(self, name):
+        print(self.name + ": " + self.description)

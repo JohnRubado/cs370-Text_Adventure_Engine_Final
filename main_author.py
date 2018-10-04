@@ -1,12 +1,6 @@
 from packages.parser.parser import *;
 
-def testPrint():
-    for area in myWorld.areas:
-        print area.name + " contains:"
-        if myWorld.player.currentArea.name == area.name:
-            print "Player"
-        for transition in area.transitions:
-            print transition.name + " in the " + transition.direction + "\n"
+
 
 
 myWorld = World();
@@ -15,16 +9,10 @@ myWorld.newArea("woods", "Many trees surround the area, wild animals can be hear
 
 myWorld.newTransition("path",["quarry", "west"], ["woods", "north"], True, "Its covered with giant boulders.")
 
-
-
-testPrint()
 myWorld.movePlayer("west")
 
-testPrint()
 
-myWorld = World("yes");
-# myWorld.newArea("yep", "yeppers")
-# myWorld.newArea("Nope", "Noperino")
+
 print myWorld.trimDirectionString("      north east  ")
 print myWorld.trimDirectionString(" south west ")
 print myWorld.trimDirectionString("  north east  ")
