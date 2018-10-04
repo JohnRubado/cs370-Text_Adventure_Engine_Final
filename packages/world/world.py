@@ -23,152 +23,168 @@ class World:
         self.player = player
         self.areas = []
 
-    #Creates a new area unless one with the given name already exists
+    #Creates a new area unless one with the given name already ex==ts
     #Returns the area object to the author.
     def newArea(self, name, description):
         if not self.areaExists(name):
             area = Area(name, description)
             self.areas.append(area)
+            #if th== == the only area in the world then set the players area to it
+            if len(self.areas) == 1:
+                self.player.currentArea = self.areas[0]
+        return area
 
-        return self.getArea(name)
 
-
-    def newTransition(self, name, area, direction, destination, isTwoWay, description = "It must lead somewhere"):
+    def newTransition(self, name, areaIn, destinationOut, isTwoWay, description = "It must lead somewhere"):
 
         areaFound = False
         destinationFound = False
         targetArea = None
         targetDestination = None
 
+        #areaIn will be in the form ["quarry", "northeast"] meaning they want a new transition in the northeast of the quarry
+        area = areaIn[0]
+        areaDirection = areaIn[1]
+
+        #destinationOut will be in the form ["river", "south"] meaning the transition will lead to the south of the quarry
+        destination = destinationOut[0]
+        destinationDirection = destinationOut[1]
+
         #ERROR CHECKING UP FRONT
-        #checking for existence of target area
+        #checking for ex==tence of target area
         areaFound = self.areaExists(area)
         if areaFound == False:
-            raise Exception("Area " + area + " does not exist")
+            raise Exception("Area " + area + " does not ex==t")
         targetArea = self.getArea(area)
 
-        #checking for existence of target destination
-        destination = self.areaExists(destination)
+        #checking for ex==tence of target destination
+        destinationFound = self.areaExists(destination)
         if destinationFound == False:
-            raise Exception("Destination " + destination + " does not exist")
+            raise Exception("Destination " + destination + " does not ex==t")
         targetDestination = self.getArea(destination)
 
-        if isTwoWay == False:
-            newTransition = transition(name, targetArea, direction, targetDestination, description)
-            targetArea.newTransition(newTransition)
-        if isTwoWay == True:
-            newTransition = transition(name, targetArea, direction, targetDestination, description)
-            targetArea.newTransition(newTransition)
+        #checking if directions given are valid
+        if not self.validDirection(areaDirection):
+            raise Exception("Direction " + areaDirection + " does not ex==t")
+        if not self.validDirection(destinationDirection):
+            raise Exception("Direction " + destinationDirection + " does not ex==t")
 
-            if cardinalPosition == "east":
-                self.newTransition(name, area, "west", destination, False, description)
-            elif cardinalPosition == "west":
-                self.newTransition(name, area, "east", destination, False, description)
-            elif cardinalPosition == "north":
-                self.newTransition(name, area, "south", destination, False, description)
-            elif cardinalPosition == "south":
-                self.newTransition(name, area, "north", destination, False, description)
-            elif cardinalPosition == "northeast":
-                self.newTransition(name, area, "southwest", destination, False, description)
-            elif cardinalPosition == "southeast":
-                self.newTransition(name, area, "northwest", destination, False, description)
-            elif cardinalPosition == "southwest":
-                self.newTransition(name, area, "northeast", destination, False, description)
-            elif cardinalPosition == "northwest":
-                self.newTransition(name, area, "southeast", destination, False, description)
+        areaDirection = self.trimDirectionString(areaDirection);
+        destinationDirection = self.trimDirectionString(destinationDirection);
+
+        #make transition in targetArea
+        targetAreaTransition = transition(name, targetArea, areaDirection, targetDestination, True, description)
+        targetArea.newTransition(targetAreaTransition)
+
+        if isTwoWay:
+            #make transition in destination with ability to come back through
+            destinationTransition = transition(name, targetDestination, destinationDirection, targetArea, True, description)
+            targetDestination.newTransition(destinationTransition)
+        else:
+            #make transition in destination without ability to come back through
+            destinationTransition = transition(name, targetDestination, destinationDirection, targetArea, False, description)
+            targetDestination.newTransition(destinationTransition)
 
     def movePlayer(self,target):
 
-            playerMoved = False;
-            destination = "";
-            player = self.player;
-            if self.validCardinalDirection(cardinalDirection):
+            playerMoved = False
+            destination = ""
+            player = self.player
+            if self.validDirection(target):
+                target = self.trimDirectionString(target)
                 for area in self.areas:
-                    if player.currentArea == area.name and playerMoved == False:
-                        if cardinalDirection == "north":
-                            if area.directions[self.NORTH].transition != None:
-                                destination = area.directions[self.NORTH].transition.destination;
-                                player.currentArea = destination;
-                                print "You have taken the " + area.directions[self.NORTH].transition.name + " in the " + cardinalDirection;
-                                playerMoved = True;
+                    if player.currentArea.name == area.name and playerMoved == False:
+                        if self.validRoute(area,target)[0]:
+                            transition = self.validRoute(area,target)[1]
+                            if transition.isPassable:
+                                player.currentArea = transition.destination
+                                playerMoved = True
                             else:
-                                print "There is no route that leads " + cardinalDirection;
-                        elif cardinalDirection == "east":
-                            if area.directions[self.EAST].transition != None:
-                                destination = area.directions[self.EAST].transition.destination;
-                                player.currentArea = destination;
-                                print "You have taken the " + area.directions[self.EAST].transition.name + " in the " + cardinalDirection;
-                                playerMoved = True;
-                            else:
-                                print "There is no route that leads " + cardinalDirection;
-                        elif cardinalDirection == "south":
-                            if area.directions[self.SOUTH].transition != None:
-                                destination = area.directions[self.SOUTH].transition.destination;
-                                player.currentArea = destination;
-                                print "You have taken the " + area.directions[self.SOUTH].transition.name + " in the " + cardinalDirection;
-                                playerMoved = True;
-                            else:
-                                print "There is no route that leads " + cardinalDirection;
+                                print "I cannot go through the " + transition.name
                         else:
-                            if area.directions[self.WEST].transition != None:
-                                destination = area.directions[self.WEST].transition.destination;
-                                player.currentArea = destination;
-                                print"You have taken the " + area.directions[self.WEST].transition.name + " in the " + cardinalDirection;
-                                playerMoved = True;
-                            else:
-                                print "There is no route that leads " + cardinalDirection;
-
+                            print "There is no route that leads " + target
+            elif self.validTransition(target,player.currentArea)[0]:
+                print "not done yet"
             else:
-                print "What is " +cardinalDirection + "? there is no " + cardinalDirection;
+                print target + " is not a place you can go"
 
-            if playerMoved == True:
-                self.look();
+        #    if playerMoved:
+            #    print "Player is in " + player.currentArea.name
 # HELPER METHODS
-    #Searches for the name of the area in the list of areas (self.areas) in the world.
+
+    #Searches the area for a transition that allows the user to go a specific direction.
+    #returns True and transition object as a tuple if transition == found that provides the route down that direction
+    #EXAMPLE:
+    #          Area:
+    #               house
+    #               house.transitions = [Door]
+    #
+    #     Transition: Door
+    #               Door.direction = "northeast"
+    #If the arguments to the function are house and northeast then it will return True since the door provides the route to the norheast
+
+    def validRoute(self, area, targetDirection):
+        for transition in area.transitions:
+             if transition.direction == targetDirection:
+                 return (True,transition)
+        return False
+
+    #Searches the given area for the given transition
+    #Returns True if transition == found False otherw==e
+    def validTransition(self, name, area):
+        for transition in area.transitions:
+             if name == transition.name:
+                return True, transition
+        return False;
+
+
+    #Searches for the name of the area in the l==t of areas (self.areas) in the world.
     #Returns area object once found.
     def getArea(self,name):
         if self.areaExists(name):
             for area in self.areas:
-                if name is area.name:
+                if name == area.name:
                     return area
         else:
-            raise exception("Area " + name + "does not exist")
+            raise exception("Area " + name + "does not ex==t")
 
 
-    #Searches for existence of an area with given name
-    #Returns true if found, false otherwise
+    #Searches for ex==tence of an area with given name
+    #Returns True if found, False otherw==e
     def areaExists(self, name):
         for area in self.areas:
             if area.name == name:
                 return True
         return False
 
-    #checks to see if direction given is a valid direction
-    #returns true if valid false otherwise
+    #checks to see if direction given == a valid direction
+    #returns True if valid False otherw==e
     def validDirection(self, direction):
         validDirection = False;
-        direction =direction.lower();
-        if direction is "north":
+        direction = self.trimDirectionString(direction.lower())
+
+        if direction == "north":
             validDirection = True
-        elif direction is "east":
+        elif direction == "east":
             validDirection = True
-        elif direction is "south":
+        elif direction == "south":
             validDirection = True
-        elif direction is "west":
+        elif direction == "west":
             validDirection = True
-        elif direction is "northeast":
+        elif direction == "northeast":
             validDirection = True
-        elif direction is "southeast":
+        elif direction == "southeast":
             validDirection = True
-        elif direction is "southwest":
+        elif direction == "southwest":
             validDirection = True
-        elif direction is "northwest":
+        elif direction == "northwest":
             validDirection = True
-        elif direction is "up":
+        elif direction == "up":
             validDirection = True
-        elif direction is "down":
+        elif direction == "down":
             validDirection = True
-        return validCardinalDir;
+
+        return validDirection;
 
     #trims all spaces from direction string and casts it to lower case
     #returns the result string
