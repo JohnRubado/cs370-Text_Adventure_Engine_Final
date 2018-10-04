@@ -23,14 +23,14 @@ class World:
         self.player = player
         self.areas = []
 
-    #Creates a new area unless one with the given name already ex==ts
+    #Creates a new area unless one with the given name already exists
     #Returns the area object to the author.
     def newArea(self, name, description):
         if not self.areaExists(name):
             area = Area(name, description)
             self.areas.append(area)
-            #if th== == the only area in the world then set the players area to it
-            if len(self.areas) == 1:
+            #if tisis the only area in the world then set the players area to it
+            if len(self.areas)== 1:
                 self.player.currentArea = self.areas[0]
         return area
 
@@ -51,23 +51,23 @@ class World:
         destinationDirection = destinationOut[1]
 
         #ERROR CHECKING UP FRONT
-        #checking for ex==tence of target area
+        #checking for existence of target area
         areaFound = self.areaExists(area)
         if areaFound == False:
-            raise Exception("Area " + area + " does not ex==t")
+            raise Exception("Area " + area + " does not exist")
         targetArea = self.getArea(area)
 
-        #checking for ex==tence of target destination
+        #checking for existence of target destination
         destinationFound = self.areaExists(destination)
         if destinationFound == False:
-            raise Exception("Destination " + destination + " does not ex==t")
+            raise Exception("Destination " + destination + " does not exist")
         targetDestination = self.getArea(destination)
 
         #checking if directions given are valid
         if not self.validDirection(areaDirection):
-            raise Exception("Direction " + areaDirection + " does not ex==t")
+            raise Exception("Direction " + areaDirection + " does not exist")
         if not self.validDirection(destinationDirection):
-            raise Exception("Direction " + destinationDirection + " does not ex==t")
+            raise Exception("Direction " + destinationDirection + " does not exist")
 
         areaDirection = self.trimDirectionString(areaDirection);
         destinationDirection = self.trimDirectionString(destinationDirection);
@@ -113,7 +113,7 @@ class World:
 # HELPER METHODS
 
     #Searches the area for a transition that allows the user to go a specific direction.
-    #returns True and transition object as a tuple if transition == found that provides the route down that direction
+    #returns True and transition object as a tuple if transitionis found that provides the route down that direction
     #EXAMPLE:
     #          Area:
     #               house
@@ -130,7 +130,7 @@ class World:
         return False
 
     #Searches the given area for the given transition
-    #Returns True if transition == found False otherw==e
+    #Returns True if transition is found False otherwisee
     def validTransition(self, name, area):
         for transition in area.transitions:
              if name == transition.name:
@@ -138,7 +138,7 @@ class World:
         return False;
 
 
-    #Searches for the name of the area in the l==t of areas (self.areas) in the world.
+    #Searches for the name of the area in the list of areas (self.areas) in the world.
     #Returns area object once found.
     def getArea(self,name):
         if self.areaExists(name):
@@ -146,19 +146,19 @@ class World:
                 if name == area.name:
                     return area
         else:
-            raise exception("Area " + name + "does not ex==t")
+            raise exception("Area " + name + "does not exist")
 
 
-    #Searches for ex==tence of an area with given name
-    #Returns True if found, False otherw==e
+    #Searches for existence of an area with given name
+    #Returns True if found, False otherwise
     def areaExists(self, name):
         for area in self.areas:
             if area.name == name:
                 return True
         return False
 
-    #checks to see if direction given == a valid direction
-    #returns True if valid False otherw==e
+    #checks to see if direction givenis a valid direction
+    #returns True if valid False otherwise
     def validDirection(self, direction):
         validDirection = False;
         direction = self.trimDirectionString(direction.lower())
