@@ -190,3 +190,9 @@ class World:
     #returns the result string
     def trimDirectionString(self, direction):
         return "".join(direction.split())
+
+    def printWorld(self):
+        print(self.description)
+        print("Areas: ")
+        for area in self.areas:
+            Area.printArea(area, area.name)

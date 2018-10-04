@@ -11,3 +11,11 @@ class Area:
     #Adds transition to the list of transitions
     def newTransition(self, transition):
         self.transitions.append(transition)
+
+    def printArea(self, name):
+        print(self.name + ": " + self.description)
+
+        # for if we need to test the transitions
+        # print("Transitions: ")
+        # for transition in self.transitions:
+        #     print(transition)
