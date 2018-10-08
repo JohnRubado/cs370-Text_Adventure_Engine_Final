@@ -32,6 +32,7 @@ class World:
             self.loadScript()
 
 
+
     #Creates a new area unless one with the given name already exists
     #Returns the area object to the author.
     def newArea(self, name, description):
@@ -41,6 +42,8 @@ class World:
             #if tisis the only area in the world then set the players area to it
             if len(self.areas)== 1:
                 self.player.currentArea = self.areas[0]
+        else:
+            raise Exception("Duplicate area " + name + " cannot be created.")
         return area
 
 
@@ -64,6 +67,9 @@ class World:
         areaFound = self.areaExists(area)
         if areaFound == False:
             raise Exception("Area " + area + " does not exist")
+
+        if area == "wood":
+            print "Why"
         targetArea = self.getArea(area)
 
         #checking for existence of target destination
@@ -205,6 +211,7 @@ class World:
     #trims all spaces from direction string and casts it to lower case
     #returns the result string
     def trimDirectionString(self, direction):
+        direction = direction.lower()
         return "".join(direction.split())
 
     def printWorld(self):
@@ -218,4 +225,4 @@ class World:
             if self.player.currentArea.name == area.name:
                 self.player.printPlayer();
 
-            print ""
+            print "\t------------------------------------------------------------------------"
