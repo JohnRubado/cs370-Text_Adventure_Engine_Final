@@ -13,9 +13,7 @@ class Area:
         self.transitions.append(transition)
 
     def printArea(self, name):
-        print(self.name + ": " + self.description)
+        print("\t" +self.name + ": " + self.description)
 
-        # for if we need to test the transitions
-        print("Transitions: ")
         for transition in self.transitions:
             transition.printTrans(transition)

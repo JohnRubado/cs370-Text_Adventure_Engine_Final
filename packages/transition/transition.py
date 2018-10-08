@@ -13,4 +13,4 @@ class transition:
         self.requirements = []
 
     def printTrans(self, name):
-        print(self.name + ": " + self.description)
+        print("\t" + self.name + ": " + self.description)

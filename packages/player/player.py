@@ -6,3 +6,7 @@ class player:
         self.description = description
         self.currentArea = None;
         self.name = name
+
+
+    def printPlayer(self):
+        print "\t" + self.name + ": " + self.description

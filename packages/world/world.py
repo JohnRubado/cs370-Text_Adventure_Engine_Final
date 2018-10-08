@@ -1,6 +1,11 @@
 from packages.area.area import Area
 from packages.transition.transition import transition;
 from packages.player.player import player;
+from pygame import mixer
+import time
+
+import sys
+
 
 
 class World:
@@ -18,10 +23,14 @@ class World:
 
 
     #AUTHOR METHODS
-    def __init__(self, description = "New World", player = player()):
+    def __init__(self, description = "New World", player = player(),loadScript = ""):
         self.description = description
         self.player = player
         self.areas = []
+        self.loadScript = loadScript;
+        if self.loadScript != "":
+            self.loadScript()
+
 
     #Creates a new area unless one with the given name already exists
     #Returns the area object to the author.
@@ -104,12 +113,19 @@ class World:
                         else:
                             print "There is no route that leads " + target
             elif self.validTransition(target,player.currentArea)[0]:
-                print "not done yet"
+                            transition = self.validTransition(target,player.currentArea)[1]
+                            if transition.isPassable:
+                                player.currentArea = transition.destination
+                                playerMoved = True
+                            else:
+                                print "I cannot go through the " + transition.name
             else:
                 print target + " is not a place you can go"
 
         #    if playerMoved:
             #    print "Player is in " + player.currentArea.name
+
+
 # HELPER METHODS
 
     #Searches the area for a transition that allows the user to go a specific direction.
@@ -127,7 +143,7 @@ class World:
         for transition in area.transitions:
              if transition.direction == targetDirection:
                  return (True,transition)
-        return False
+        return False, None
 
     #Searches the given area for the given transition
     #Returns True if transition is found False otherwisee
@@ -135,7 +151,7 @@ class World:
         for transition in area.transitions:
              if name == transition.name:
                 return True, transition
-        return False;
+        return False, None;
 
 
     #Searches for the name of the area in the list of areas (self.areas) in the world.
@@ -193,6 +209,13 @@ class World:
 
     def printWorld(self):
         print(self.description)
+        for x in range(len(self.description)):
+            sys.stdout.write("-")
+        print ""
         print("Areas: ")
         for area in self.areas:
             Area.printArea(area, area.name)
+            if self.player.currentArea.name == area.name:
+                self.player.printPlayer();
+
+            print ""
