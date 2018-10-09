@@ -23,7 +23,8 @@ class World:
 
 
     #AUTHOR METHODS
-    def __init__(self, description = "New World", player = player(),loadScript = ""):
+    def __init__(self,name, description = "New World", player = player(),loadScript = ""):
+        self.name = name
         self.description = description
         self.player = player
         self.areas = []

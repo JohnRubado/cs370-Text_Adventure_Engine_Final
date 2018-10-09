@@ -10,7 +10,7 @@ def onLoadScript():
 script = onLoadScript
 
 player = player("Johnny", "A brolic young lad")
-myWorld = World("A vast land of wonders",player, script);
+myWorld = World("Great Land","A vast land of wonders",player, script);
 myWorld.newArea("quarry", "There are many rocks in this place.")
 myWorld.newArea("woods", "Many trees surround the area, wild animals can be heard")
 

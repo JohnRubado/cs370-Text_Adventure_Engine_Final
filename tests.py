@@ -4,7 +4,7 @@ from packages.world.world import *;
 #names and descriptions
 #Test will ensure duplicate areas cannot be created and that the correct world and areas were created.
 def newAreaTest():
-    testWorld = World("Death Valley", player("Johnny", "Exploration master"))
+    testWorld = World("Death Valley","A very dark and spooky place.", player("Johnny"))
     testWorld.newArea("Woods", "A very dense forest, you can hear the birds.")
     testWorld.newArea("Pond", "Its a deep pond, I cant see the bottom.")
     testWorld.printWorld()
@@ -21,7 +21,7 @@ def newAreaTest():
 def newTransitionTest():
 
     #testing creation of valid transitions
-    testWorld = World("Death Valley", player("Johnny"))
+    testWorld = World("Death Valley","A very dark and spooky place.", player("Johnny"))
     testWorld.newArea("Woods", "A very dense forest, you can hear the birds.")
     testWorld.newArea("Pond", "Its a deep pond, I cant see the bottom.")
 
@@ -69,7 +69,7 @@ def newTransitionTest():
 #It will ensure that a message will be printed if a player attempts to move through an non-existent route or direction
 def movePlayerTest():
 
-        testWorld = World("Death Valley", player("Johnny"))
+        testWorld = World("Death Valley","A very dark and spooky place.", player("Johnny"))
         testWorld.newArea("Woods", "A very dense forest, you can hear the birds.")
         testWorld.newArea("Pond", "Its a deep pond, I cant see the bottom.")
 
@@ -119,7 +119,7 @@ def movePlayerTest():
 
 
 def runTests():
-    #newAreaTest()
+    newAreaTest()
     newTransitionTest()
     movePlayerTest()
 
