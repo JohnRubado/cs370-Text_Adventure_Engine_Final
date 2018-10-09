@@ -3,7 +3,6 @@ from packages.transition.transition import transition;
 from packages.player.player import player;
 from pygame import mixer
 import time
-
 import sys
 
 
