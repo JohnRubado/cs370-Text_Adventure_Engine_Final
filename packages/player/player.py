@@ -9,4 +9,4 @@ class player:
 
 
     def printPlayer(self):
-        print "\t" + self.name + ": " + self.description
+        print "You are " + self.name + ". " + self.description

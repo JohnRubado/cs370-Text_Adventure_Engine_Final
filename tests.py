@@ -8,6 +8,7 @@ def newAreaTest():
     testWorld.newArea("Woods", "A very dense forest, you can hear the birds.")
     testWorld.newArea("Pond", "Its a deep pond, I cant see the bottom.")
     testWorld.printWorld()
+    print "Two areas succesfully made."
     try:
         testWorld.newArea("Pond", "Its a deep pond, I cant see the bottom.")
     except:
@@ -37,9 +38,7 @@ def newTransitionTest():
     testWorld.newTransition("path8",["Woods","   northeAst "], ["Pond","SouThEast"], False, "Its path8")
     testWorld.newTransition("path9",["Woods","   SoUtHWeSt  "], ["Pond","noRtHwEsT"], False, "Its path9")
     testWorld.newTransition("path10",["Woods","   Up  "], ["Pond","  dOwN "], False, "Its path10")
-
-
-    testWorld.printWorld()
+    print "All 10 transitions successfully made."
 
     #Create invalid transitions, expect Exceptions to be raised.
     try:
@@ -88,33 +87,43 @@ def movePlayerTest():
         testWorld.newTransition("path10",["Woods","   Up  "], ["Pond","  dOwN "], False, "Its path10")
 
         #Test movement through all valid routes. Player begins in the woods.
-        print "Player in " + testWorld.player.currentArea.name
         testWorld.movePlayer("north")
-        print "Player in " + testWorld.player.currentArea.name
         testWorld.movePlayer("east")
-        print "Player in " + testWorld.player.currentArea.name
         testWorld.movePlayer("south")
-        print "Player in " + testWorld.player.currentArea.name
         testWorld.movePlayer("west")
-        print "Player in " + testWorld.player.currentArea.name
         testWorld.movePlayer("northeast")
-        print "Player in " + testWorld.player.currentArea.name
         testWorld.movePlayer("southeast")
-        print "Player in " + testWorld.player.currentArea.name
         testWorld.movePlayer("southwest")
-        print "Player in " + testWorld.player.currentArea.name
         testWorld.movePlayer("northwest")
-        print "Player in " + testWorld.player.currentArea.name
         testWorld.movePlayer("up")
-        print "Player in " + testWorld.player.currentArea.name
+
         testWorld.movePlayer("down")
-        print "Player in " + testWorld.player.currentArea.name
+
 
         #Test movement through an invalid route expect and exception to be raised
         try:
             testWorld.movePlayer("down")
         except Exception as e:
             print e.args[0]
+        print "#################################### END movePlayerTest ####################################"
+# This test will ensure that when passed no arguments, look will display the area and the transitions inside that area.
+# If any arguments are passed, an error message will be displayed because there is no implementation for that yet.
+def lookTest():
+    testWorld = World("Death Valley","A very dark and spooky place.", player("Johnny" , "A handsome lad."))
+    testWorld.newArea("Woods", "A very dense forest, you can hear the birds.")
+    testWorld.newArea("Pond", "Its a deep pond, you cant see the bottom.")
+
+    testWorld.newTransition("path1",["Woods","  NorTh  "], ["Pond","eAsT"], True, "Its path1")
+    testWorld.newTransition("path2",["Woods","   SoUtH"], ["Pond","wEsT"], True, "Its path2")
+    testWorld.newTransition("path3",["Woods","   northeAst "], ["Pond","SouThEast"], True, "Its path3")
+
+    testWorld.look()
+    testWorld.look("me")
+    #should display error message.
+    testWorld.look("path1")
+
+
+    print "#################################### END lookTest ####################################"
 
 
 
@@ -122,5 +131,6 @@ def runTests():
     newAreaTest()
     newTransitionTest()
     movePlayerTest()
+    lookTest()
 
 runTests()

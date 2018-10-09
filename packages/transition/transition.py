@@ -12,4 +12,4 @@ class transition:
         self.requirements = []
 
     def printTrans(self, name):
-        print("\t" + self.name + ": " + self.description + ". Leads "+ self.direction)
+        print( "You see a " + self.name + ". " + self.description + " It seems to lead "+ self.direction)

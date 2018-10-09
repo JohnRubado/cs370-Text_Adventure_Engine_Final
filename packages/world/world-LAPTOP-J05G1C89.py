@@ -2,7 +2,6 @@ from packages.area.area import Area
 from packages.transition.transition import transition;
 from packages.player.player import player;
 from pygame import mixer
-
 import time
 import sys
 
@@ -129,26 +128,9 @@ class World:
             else:
                 print target + " is not a place you can go"
 
-            if playerMoved:
-                print "You use the " + transition.name
-                self.displayAreaDescription()
+        #    if playerMoved:
+            #    print "Player is in " + player.currentArea.name
 
-
-    #Method will be called when player types look
-    #Displays everything in the room
-    def look(self, target = ""):
-        if target == "":
-            self.player.currentArea.printArea()
-        elif target == "me":
-            self.player.printPlayer()
-        else:
-            print "You dont see a " + target
-
-    #method will be called when a player enters an area
-    #it just displays the area they are in and the description of the area.
-    def displayAreaDescription(self):
-        print "You find yourself in the " + self.player.currentArea.name;
-        print  self.player.currentArea.description
 
 # HELPER METHODS
 
@@ -239,4 +221,8 @@ class World:
         print ""
         print("Areas: ")
         for area in self.areas:
-            area.printArea()
+            Area.printArea(area, area.name)
+            if self.player.currentArea.name == area.name:
+                self.player.printPlayer();
+
+            print "\t------------------------------------------------------------------------"

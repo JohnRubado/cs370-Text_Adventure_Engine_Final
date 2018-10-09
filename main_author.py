@@ -1,27 +1,22 @@
 from packages.world.world import *;
-
+from packages.parser.parser import parser
 
 mixer.init()
 
-def onLoadScript():
-    birds = mixer.Sound("birds.wav")
-    birds.play()
+# def onLoadScript():
+#     birds = mixer.Sound("birds.wav")
+#     birds.play()
+#
+# script = onLoadScript
 
-script = onLoadScript
 
 player = player("Johnny", "A brolic young lad")
-myWorld = World("Great Land","A vast land of wonders",player, script);
+myWorld = World("The Deep","A vast land of wonders",player);
+
+
 myWorld.newArea("quarry", "There are many rocks in this place.")
 myWorld.newArea("woods", "Many trees surround the area, wild animals can be heard")
 
 myWorld.newTransition("path",["quarry", "west"], ["woods", "north"], True, "Its covered with giant boulders.")
-
-myWorld.movePlayer("path")
-myWorld.printWorld()
-
-myWorld.movePlayer("west")
-myWorld.movePlayer("east")
-myWorld.movePlayer("south")
-myWorld.movePlayer("north")
-myWorld.printWorld()
-time.sleep(20)
+parser = parser(myWorld)
+parser.start()

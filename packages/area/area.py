@@ -12,8 +12,8 @@ class Area:
     def newTransition(self, transition):
         self.transitions.append(transition)
 
-    def printArea(self, name):
-        print("\t" +self.name + ": " + self.description)
+    def printArea(self):
+        print("You are in the " +self.name + ". " + self.description)
 
         for transition in self.transitions:
             transition.printTrans(transition)
