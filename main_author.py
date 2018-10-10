@@ -17,7 +17,7 @@ myWorld = World("The Narrows","An uncharted territory. Good Luck.",player);
 quarry = myWorld.newArea("quarry", "Placeholder description")
 quarry.setDescription("There are many rocks around here")
 woods = myWorld.newArea("woods", "Many trees surround the area, wild animals can be heard")
-lake = myWorld.newArea("cavern", "")
+lake = myWorld.newArea("cavern", "Its dark and wet")
 
 
 myWorld.newTransition("path",["quarry", "west"], ["woods", "north"], True, "Its covered with giant boulders.")
