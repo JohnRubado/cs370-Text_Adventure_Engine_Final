@@ -29,10 +29,8 @@ class World:
         self.player = player
         self.areas = []
         self.loadScript = loadScript;
-        if self.loadScript != "":
-            self.loadScript()
-
-
+        # if self.loadScript != "":
+        #     self.loadScript()
 
     #Creates a new area unless one with the given name already exists
     #Returns the area object to the author.
@@ -46,7 +44,6 @@ class World:
         else:
             raise Exception("Duplicate area " + name + " cannot be created.")
         return area
-
 
     def newTransition(self, name, areaIn, destinationOut, isTwoWay, description = "It must lead somewhere"):
 
@@ -130,9 +127,8 @@ class World:
                 print target + " is not a place you can go"
 
             if playerMoved:
-                print "You use the " + transition.name
+                print "You use the " + transition.name + " that leads " + transition.direction
                 self.displayAreaDescription()
-
 
     #Method will be called when player types look
     #Displays everything in the room
@@ -177,7 +173,6 @@ class World:
                 return True, transition
         return False, None;
 
-
     #Searches for the name of the area in the list of areas (self.areas) in the world.
     #Returns area object once found.
     def getArea(self,name):
@@ -187,7 +182,6 @@ class World:
                     return area
         else:
             raise exception("Area " + name + "does not exist")
-
 
     #Searches for existence of an area with given name
     #Returns True if found, False otherwise

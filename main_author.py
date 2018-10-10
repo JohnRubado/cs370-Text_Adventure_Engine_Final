@@ -9,14 +9,18 @@ mixer.init()
 #
 # script = onLoadScript
 
+#CREATE THE WORLD AND THE PLAYER
+player = player("Johnny", "A young man")
+myWorld = World("The Narrows","An uncharted territory. Good Luck.",player);
 
-player = player("Johnny", "A brolic young lad")
-myWorld = World("The Deep","A vast land of wonders",player);
+#CREATE SOME AREAS
+quarry = myWorld.newArea("quarry", "Placeholder description")
+quarry.setDescription("There are many rocks around here")
+woods = myWorld.newArea("woods", "Many trees surround the area, wild animals can be heard")
+lake = myWorld.newArea("cavern", "")
 
-
-myWorld.newArea("quarry", "There are many rocks in this place.")
-myWorld.newArea("woods", "Many trees surround the area, wild animals can be heard")
 
 myWorld.newTransition("path",["quarry", "west"], ["woods", "north"], True, "Its covered with giant boulders.")
+
 parser = parser(myWorld)
 parser.start()

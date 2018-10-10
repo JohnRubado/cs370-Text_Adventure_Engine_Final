@@ -9,7 +9,6 @@ class transition:
         self.destination = destination
         self.isPassable = isPassable
         self.description = description
-        self.requirements = []
 
     def printTrans(self, name):
         print( "You see a " + self.name + ". " + self.description + " It seems to lead "+ self.direction)
