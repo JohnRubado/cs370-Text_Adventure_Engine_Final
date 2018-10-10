@@ -4,10 +4,9 @@ class parser:
         self.world = world
 
     def start(self):
-
-        os.system('cls')
         print "\nWelcome to " + self.world.name + ". " + self.world.description;
         self.world.displayAreaDescription()
+        self.world.loadScript()
         while(True):
             userInput = raw_input()
             print "";
