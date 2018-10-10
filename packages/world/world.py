@@ -1,7 +1,6 @@
 from packages.area.area import Area
 from packages.transition.transition import transition;
 from packages.player.player import player;
-from pygame import mixer
 
 import time
 import sys
@@ -241,11 +240,9 @@ class World:
         for area in self.areas:
             area.printArea()
 
-    def view(self,name):
+    def view(self):
         playerArea=self.player.currentArea
         areaDescription = playerArea.description
         print " I seem to be currently in  " + playerArea.name + " : " + areaDescription;
-        for transition in playerArea.transitions
-            print "There is a " + self.transitions
-        for items in playerArea.items
-            print "I see " + self.items
+        for transition in playerArea.transitions:
+            print "There is a " + transition.name
