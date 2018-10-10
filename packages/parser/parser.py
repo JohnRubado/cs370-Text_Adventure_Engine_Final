@@ -5,7 +5,7 @@ class parser:
 
     def start(self):
 
-        os.system('cls')
+        
         print "\nWelcome to " + self.world.name;
         self.world.displayAreaDescription()
         while(True):

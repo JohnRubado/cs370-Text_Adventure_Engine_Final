@@ -19,7 +19,7 @@ myWorld.newArea("woods", "Many trees surround the area, wild animals can be hear
 myWorld.newArea("River", "A flowing River")
 
 myWorld.newTransition("path",["quarry", "west"], ["woods", "north"], True, "Its covered with giant boulders.")
-myWorld.newTransition("path",["quarry", "east"], ["River", "south"], True, "A bank to a river")
+myWorld.newTransition("trail",["quarry", "east"], ["River", "south"], True, "A bank to a river")
 
 myWorld.view()
 parser = parser(myWorld)
