@@ -240,3 +240,12 @@ class World:
         print("Areas: ")
         for area in self.areas:
             area.printArea()
+
+    def view(self,name):
+        playerArea=self.player.currentArea
+        areaDescription = playerArea.description
+        print " I seem to be currently in  " + playerArea.name + " : " + areaDescription;
+        for transition in playerArea.transitions
+            print "There is a " + self.transitions
+        for items in playerArea.items
+            print "I see " + self.items
