@@ -1,5 +1,6 @@
 from packages.world.world import *;
 from packages.parser.parser import parser
+from pygame import mixer
 
 mixer.init()
 
@@ -11,7 +12,7 @@ script = onLoadScript
 
 #CREATE THE WORLD AND THE PLAYER
 player = player("Johnny", "A young man")
-myWorld = World("The Narrows","An uncharted territory. Good Luck.",player);
+myWorld = World("The Narrows","An uncharted territory. Good Luck.",player, script);
 
 #CREATE SOME AREAS
 quarry = myWorld.newArea("quarry", "Placeholder description")

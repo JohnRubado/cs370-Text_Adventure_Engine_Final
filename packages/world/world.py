@@ -1,7 +1,7 @@
 from packages.area.area import Area
 from packages.transition.transition import transition;
 from packages.player.player import player;
-from pygame import mixer
+
 
 import time
 import sys
@@ -29,8 +29,7 @@ class World:
         self.player = player
         self.areas = []
         self.loadScript = loadScript;
-        # if self.loadScript != "":
-        #     self.loadScript()
+
 
     #Creates a new area unless one with the given name already exists
     #Returns the area object to the author.
