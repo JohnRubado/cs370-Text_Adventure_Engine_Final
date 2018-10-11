@@ -28,7 +28,7 @@ class World:
         self.description = description
         self.player = player
         self.areas = []
-        # self.loadScript = loadScript;
+        self.loadScript = loadScript;
         # if self.loadScript != "":
         #     self.loadScript()
 

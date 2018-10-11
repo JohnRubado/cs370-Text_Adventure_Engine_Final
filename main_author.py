@@ -3,11 +3,11 @@ from packages.parser.parser import parser
 
 mixer.init()
 
-# def onLoadScript():
-#     birds = mixer.Sound("birds.wav")
-#     birds.play()
-#
-# script = onLoadScript
+def onLoadScript():
+    birds = mixer.Sound("birds.wav")
+    birds.play()
+
+script = onLoadScript
 
 #CREATE THE WORLD AND THE PLAYER
 player = player("Johnny", "A young man")
