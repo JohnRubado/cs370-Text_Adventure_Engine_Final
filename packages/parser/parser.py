@@ -13,7 +13,7 @@ class parser:
             userInput = userInput.lower().split()
             moveKeywords = ["move","go", "use"]
             lookKeywords = ["look", "show"]
-            noiseWords = ["at", "am", "here", "there"]
+            noiseWords = ["at", "am", "here", "there", "to"]
             if len(userInput) == 0:
                 continue
             for word in noiseWords:
