@@ -28,7 +28,7 @@ class World:
         self.description = description
         self.player = player
         self.areas = []
-        self.loadScript = loadScript;
+        # self.loadScript = loadScript;
         # if self.loadScript != "":
         #     self.loadScript()
 
@@ -66,8 +66,7 @@ class World:
         if areaFound == False:
             raise Exception("Area " + area + " does not exist")
 
-        if area == "wood":
-            print "Why"
+
         targetArea = self.getArea(area)
 
         #checking for existence of target destination
@@ -98,6 +97,7 @@ class World:
             destinationTransition = transition(name, targetDestination, destinationDirection, targetArea, False, description)
             targetDestination.newTransition(destinationTransition)
 
+        return targetAreaTransition, destinationTransition
     def movePlayer(self,target):
 
             playerMoved = False
@@ -112,8 +112,6 @@ class World:
                             if transition.isPassable:
                                 player.currentArea = transition.destination
                                 playerMoved = True
-                            else:
-                                print "I cannot go through the " + transition.name
                         else:
                             print "There is no route that leads " + target
             elif self.validTransition(target,player.currentArea)[0]:
@@ -121,14 +119,21 @@ class World:
                             if transition.isPassable:
                                 player.currentArea = transition.destination
                                 playerMoved = True
-                            else:
-                                print "I cannot go through the " + transition.name
             else:
                 print target + " is not a place you can go"
 
             if playerMoved:
-                print "You use the " + transition.name + " that leads " + transition.direction
+                if transition.onSuccess == None:
+                    print "You use the " + transition.name + " that leads " + transition.direction
+                else:
+                    print transition.onSuccess
                 self.displayAreaDescription()
+            else:
+                if transition.onFailure == None:
+                    print "You cannot traverse the " + transition.name
+                else:
+                    print transition.onFailure
+
 
     #Method will be called when player types look
     #Displays everything in the room

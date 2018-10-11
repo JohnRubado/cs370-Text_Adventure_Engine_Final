@@ -6,7 +6,7 @@ class parser:
     def start(self):
         print "\nWelcome to " + self.world.name + ". " + self.world.description;
         self.world.displayAreaDescription()
-        self.world.loadScript()
+        # self.world.loadScript()
         while(True):
             userInput = raw_input()
             print "";
