@@ -103,6 +103,7 @@ class World:
             playerMoved = False
             destination = ""
             player = self.player
+            transition = None
             if self.validDirection(target):
                 target = self.trimDirectionString(target)
                 for area in self.areas:
@@ -128,7 +129,7 @@ class World:
                 else:
                     print transition.onSuccess
                 self.displayAreaDescription()
-            else:
+            elif transition != None:
                 if transition.onFailure == None:
                     print "You cannot traverse the " + transition.name
                 else:

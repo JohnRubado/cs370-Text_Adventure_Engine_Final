@@ -11,7 +11,7 @@ mixer.init()
 
 #CREATE THE WORLD AND THE PLAYER
 player = player("Johnny", "A young man")
-myWorld = World("The Narrows","An uncharted territory. Good Luck.",player, script);
+myWorld = World("The Narrows","An uncharted territory. Good Luck.",player);
 
 #CREATE SOME AREAS
 quarry = myWorld.newArea("quarry", "Placeholder description")
