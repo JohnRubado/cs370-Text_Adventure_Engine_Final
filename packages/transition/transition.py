@@ -8,6 +8,8 @@ class transition:
         self.direction = direction
         self.destination = destination
         self.isPassable = isPassable
+        self.onSuccess = None
+        self.onFailure = None
         self.description = description
 
     def printTrans(self, name):
