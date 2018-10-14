@@ -1,8 +1,8 @@
 from packages.area.area import Area
-from packages.transition.transition import transition;
-from packages.player.player import player;
-from pygame import mixer
-
+from packages.transition.transition import transition
+from packages.player.player import player
+from packages.parser.parser import parser
+import json
 import time
 import sys
 
@@ -28,9 +28,45 @@ class World:
         self.description = description
         self.player = player
         self.areas = []
-        self.loadScript = loadScript;
-        # if self.loadScript != "":
-        #     self.loadScript()
+        # self.loadScript = loadScript;
+
+
+    #Serializes all of the world into JSON format for later loading
+    def saveProgress(self):
+        saveFile = open("./"+ self.player.name + ".txt", 'w+')
+        world = {"name": self.name,
+        "description":self.description,
+        "areas": [],
+        "player": {"name": self.player.name,
+        "description":self.player.description,
+        "currentArea":self.player.currentArea.name}}
+        for area in self.areas:
+            currArea = {"name" : area.name,
+            "description": area.description,
+            "transitions": []}
+            for transition in area.transitions:
+                currTransition = {"name": transition.name,
+                "direction": transition.direction,
+                "isPassable": transition.isPassable,
+                "onSuccess": transition.onSuccess,
+                "onFailure": transition.onFailure,
+                "destination": transition.destination.name,
+                "area": transition.area.name,
+                "description":transition.description}
+                currArea["transitions"].append(currTransition)
+            world["areas"].append(currArea)
+
+
+        world = json.dumps(world,indent=4, separators=(',', ': '))
+        saveFile.write(world)
+        saveFile.close()
+        print "Progress saved in " + self.player.name + ".txt"
+
+        # for area in json.loads(world)["areas"]:
+        #     for transition in area["transitions"]:
+        #         print transition["name"] + " in " + transition["area"]
+        #print world
+
 
     #Creates a new area unless one with the given name already exists
     #Returns the area object to the author.
@@ -39,7 +75,7 @@ class World:
             area = Area(name, description)
             self.areas.append(area)
             #if tisis the only area in the world then set the players area to it
-            if len(self.areas)== 1:
+            if len(self.areas) == 1:
                 self.player.currentArea = self.areas[0]
         else:
             raise Exception("Duplicate area " + name + " cannot be created.")
@@ -98,11 +134,13 @@ class World:
             targetDestination.newTransition(destinationTransition)
 
         return targetAreaTransition, destinationTransition
+
     def movePlayer(self,target):
 
             playerMoved = False
             destination = ""
             player = self.player
+            transition = None
             if self.validDirection(target):
                 target = self.trimDirectionString(target)
                 for area in self.areas:
@@ -128,28 +166,73 @@ class World:
                 else:
                     print transition.onSuccess
                 self.displayAreaDescription()
-            else:
+            elif transition != None:
                 if transition.onFailure == None:
                     print "You cannot traverse the " + transition.name
                 else:
                     print transition.onFailure
 
-
     #Method will be called when player types look
     #Displays everything in the room
     def look(self, target = ""):
-        if target == "":
-            self.player.currentArea.printArea()
-        elif target == "me":
-            self.player.printPlayer()
+        if len(self.areas) != 0:
+            if target == "":
+                self.player.currentArea.printArea()
+            elif target == "me":
+                self.player.printPlayer()
+            else:
+                print "You dont see a " + target
         else:
-            print "You dont see a " + target
+            print "You are everywhere and nowhere all at once. BUT HOW???"
 
     #method will be called when a player enters an area
     #it just displays the area they are in and the description of the area.
     def displayAreaDescription(self):
         print "You find yourself in the " + self.player.currentArea.name;
         print  self.player.currentArea.description
+
+    #calling this method starts a new game.
+    def startGame(self, isNew = True):
+        play = parser(self)
+        play.start(isNew)
+
+    #calling this method loads a previous game from the JSON formatted file name given.
+    def loadGame(self, fileName):
+
+        #read world data from file
+        with open(fileName) as f:
+            data = json.load(f)
+
+        #redefining world properties
+        self.areas = []
+        self.player = player(data["player"]["name"],data["player"]["description"])
+        self.name = data["name"]
+        self.description = data["description"]
+
+        #set world properties
+        self.name = data["name"]
+        self.description = data["description"]
+
+
+        #make all areas
+        for area in data["areas"]:
+            self.newArea(area["name"],area["description"])
+
+
+        #with the area objects we can now make the desired transitions and set the players currentArea property
+        for area in data["areas"]:
+            for transitionMap in area["transitions"]:
+                newTrans = transition(transitionMap["name"],self.getArea(transitionMap["area"]),transitionMap["direction"],self.getArea(transitionMap["destination"]), transitionMap["isPassable"],transitionMap["description"])
+                newTrans.onSuccess = transitionMap["onSuccess"]
+                newTrans.onFailure = transitionMap["onFailure"]
+                newTrans.area.transitions.append(newTrans)
+
+        self.player.name = data["player"]["name"]
+        self.player.description = data["player"]["description"]
+        self.player.currentArea = self.getArea(data["player"]["currentArea"])
+
+        self.startGame(False)
+
 
 # HELPER METHODS
 
