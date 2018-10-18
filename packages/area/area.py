@@ -5,6 +5,7 @@ class Area:
         self.name = name
         self.transitions = []
         self.description = description
+        self.items = []
 
 
 
@@ -17,8 +18,13 @@ class Area:
     def newTransition(self, transition):
         self.transitions.append(transition)
 
+    def newItem(self, item):
+        self.items.append(item)
+
     def printArea(self):
         print("You are in the " +self.name + ". " + self.description)
 
         for transition in self.transitions:
             transition.printTrans(transition)
+        for item in self.items:
+            item.printItem(item)

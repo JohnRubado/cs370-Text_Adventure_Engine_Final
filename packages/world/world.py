@@ -1,7 +1,8 @@
 from packages.area.area import Area
 from packages.transition.transition import transition;
+from packages.item.item import item
 from packages.player.player import player;
-from pygame import mixer
+# from pygame import mixer
 
 import time
 import sys
@@ -23,12 +24,12 @@ class World:
 
 
     #AUTHOR METHODS
-    def __init__(self,name, description = "New World", player = player(),loadScript = ""):
+    def __init__(self,name, description = "New World", player = player()):
         self.name = name
         self.description = description
         self.player = player
         self.areas = []
-        self.loadScript = loadScript;
+        # self.loadScript = loadScript;
         # if self.loadScript != "":
         #     self.loadScript()
 
@@ -44,6 +45,20 @@ class World:
         else:
             raise Exception("Duplicate area " + name + " cannot be created.")
         return area
+
+    def newItem(self, name, description, area, isMoveable):
+        itemArea = area[0]
+        areaFound = self.areaExists(itemArea)
+        if areaFound == False:
+            raise Exception("Area " + area + " does not exist")
+
+        areaItem = self.getArea(itemArea)
+
+        item1 = item(name, description, area, isMoveable)
+        areaItem.newItem(item1)
+
+        return item1
+
 
     def newTransition(self, name, areaIn, destinationOut, isTwoWay, description = "It must lead somewhere"):
 
@@ -145,6 +160,14 @@ class World:
         else:
             print "You dont see a " + target
 
+    #A method that allows for the player to quit the game when they want
+    def quitGame(self):
+        sys.exit(0)
+
+
+    #A method that gives user a help menu when they type out "help"
+    def helpUser(self):
+        print("To quit the game, simply type 'quit'")
     #method will be called when a player enters an area
     #it just displays the area they are in and the description of the area.
     def displayAreaDescription(self):

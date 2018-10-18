@@ -1,17 +1,17 @@
 from packages.world.world import *;
 from packages.parser.parser import parser
 
-mixer.init()
+# mixer.init()
 
-def onLoadScript():
-    birds = mixer.Sound("birds.wav")
-    birds.play()
+# def onLoadScript():
+#     birds = mixer.Sound("birds.wav")
+#     birds.play()
 
-script = onLoadScript
+# script = onLoadScript
 
 #CREATE THE WORLD AND THE PLAYER
 player = player("Johnny", "A young man")
-myWorld = World("The Narrows","An uncharted territory. Good Luck.",player, script);
+myWorld = World("The Narrows","An uncharted territory. Good Luck.",player);
 
 #CREATE SOME AREAS
 quarry = myWorld.newArea("quarry", "Placeholder description")
@@ -32,6 +32,9 @@ outCavern.description = "The light is beaming in from above, there must be anoth
 
 inWaterfall.onSuccess = "You wake up gasping for air. You must have fallen out of the waterfall and hit your head."
 outWaterfall.onFailure= "The rocks are too slippery to go up."
+
+#new item test
+myWorld.newItem("rock", "it's a small rock", ["quarry"], False)
 
 parser = parser(myWorld)
 parser.start()

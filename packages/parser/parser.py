@@ -14,6 +14,8 @@ class parser:
             moveKeywords = ["move","go", "use"]
             lookKeywords = ["look", "show"]
             noiseWords = ["at", "am", "here", "there"]
+            quitWords = ["quit"]
+            helpWords = ["help"]
             if len(userInput) == 0:
                 continue
             for word in noiseWords:
@@ -29,5 +31,13 @@ class parser:
                     self.world.look()
                 else:
                     self.world.look(argument)
+
+            elif userInput[0] in quitWords:
+                argument = ' '.join(userInput[1:])
+                self.world.quitGame()
+
+            elif userInput[0] in helpWords:
+                argument = ' '.join(userInput[1:])
+                self.world.helpUser()
             else:
                 print "I don't know " + userInput[0]
