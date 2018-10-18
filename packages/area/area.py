@@ -5,13 +5,9 @@ class Area:
         self.name = name
         self.transitions = []
         self.description = description
-<<<<<<< HEAD
         self.items = []
         self.inAreaScripts = []
 
-=======
-
->>>>>>> simple_scripting
 
 
     def setDescription(self, description =""):

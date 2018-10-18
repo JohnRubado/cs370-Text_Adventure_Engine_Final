@@ -2,6 +2,7 @@ from packages.area.area import Area
 from packages.transition.transition import transition
 from packages.player.player import player
 from packages.parser.parser import parser
+from packages.item.item import item
 import json
 import time
 import sys
@@ -23,7 +24,7 @@ class World:
 
 
     #AUTHOR METHODS
-    def __init__(self,name, description = "New World", player = player()):
+    def __init__(self,name, description = "New World", player = player(),loadScript = ""):
         self.name = name
         self.description = description
         self.player = player
@@ -82,12 +83,12 @@ class World:
         return area
 
     def newItem(self, name, description, area, isMoveable):
-        itemArea = area[0]
-        areaFound = self.areaExists(itemArea)
+
+        areaFound = self.areaExists(area)
         if areaFound == False:
             raise Exception("Area " + area + " does not exist")
 
-        areaItem = self.getArea(itemArea)
+        areaItem = self.getArea(area)
 
         item1 = item(name, description, area, isMoveable)
         areaItem.newItem(item1)

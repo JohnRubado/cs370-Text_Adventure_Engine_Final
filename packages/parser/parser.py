@@ -19,13 +19,11 @@ class parser:
             userInput = userInput.lower().split()
             moveKeywords = ["move","go", "use"]
             lookKeywords = ["look", "show"]
-<<<<<<< HEAD
             noiseWords = ["at", "am", "here", "there"]
             quitWords = ["quit"]
             helpWords = ["help"]
-=======
             noiseWords = ["at", "am", "here", "there", "to"]
->>>>>>> simple_scripting
+
             if len(userInput) == 0:
                 continue
             for word in noiseWords:
@@ -41,16 +39,12 @@ class parser:
                     self.world.look()
                 else:
                     self.world.look(argument)
-<<<<<<< HEAD
-
             elif userInput[0] in quitWords:
                 argument = ' '.join(userInput[1:])
                 self.world.quitGame()
-
             elif userInput[0] in helpWords:
                 argument = ' '.join(userInput[1:])
                 self.world.helpUser()
-=======
             elif userInput[0] == "save":
                 self.world.saveProgress()
             elif userInput[0] == "load":
@@ -61,8 +55,5 @@ class parser:
                         self.world.loadGame(loadFile)
                 elif len(userInput) == 1:
                     print "Must provide file name to load"
-
-
->>>>>>> simple_scripting
             else:
                 print "I don't know " + userInput[0]

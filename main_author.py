@@ -3,7 +3,7 @@ from packages.world.world import *;
 from pygame import *
 from PIL import Image
 
-# mixer.init()
+mixer.init()
 
 def onLoadScript():
      birds = mixer.Sound("sounds/birds.wav")
@@ -65,5 +65,5 @@ inWaterfall.onSuccess = "You wake up gasping for air. You must have fallen out o
 outWaterfall.onFailure= "The rocks are too slippery to go up."
 
 
-myWorld.newItem("rock", "it's a small rock", ["quarry"], False)
+myWorld.newItem("rock", "it's a small rock", "quarry", False)
 myWorld.startGame()
