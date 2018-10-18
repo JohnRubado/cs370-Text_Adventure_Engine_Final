@@ -12,7 +12,7 @@ class parser:
             print "Game loaded."
             if len(self.world.areas) > 0:
                 self.world.displayAreaDescription()
-        # self.world.loadScript()
+        self.world.loadScript()
         while(True):
             userInput = raw_input()
             print "";

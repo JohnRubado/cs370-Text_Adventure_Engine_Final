@@ -74,7 +74,7 @@ class World:
         if not self.areaExists(name):
             area = Area(name, description)
             self.areas.append(area)
-            #if tisis the only area in the world then set the players area to it
+            #if this is the only area in the world then set the players area to it
             if len(self.areas) == 1:
                 self.player.currentArea = self.areas[0]
         else:
@@ -155,6 +155,7 @@ class World:
             elif self.validTransition(target,player.currentArea)[0]:
                             transition = self.validTransition(target,player.currentArea)[1]
                             if transition.isPassable:
+
                                 player.currentArea = transition.destination
                                 playerMoved = True
             else:
@@ -165,12 +166,24 @@ class World:
                     print "You use the " + transition.name + " that leads " + transition.direction
                 else:
                     print transition.onSuccess
+
+                #if there is a script to be executed
+                if transition.onSuccessScripts != []:
+                    for script in transition.onSuccessScripts:
+                        script()
+                if player.currentArea.inAreaScripts != []:
+                    for script in player.currentArea.inAreaScripts:
+                        script()
+
                 self.displayAreaDescription()
             elif transition != None:
                 if transition.onFailure == None:
                     print "You cannot traverse the " + transition.name
                 else:
                     print transition.onFailure
+                if transition.onFailScripts != []:
+                    for script in transition.onFailureScripts:
+                        script()
 
     #Method will be called when player types look
     #Displays everything in the room

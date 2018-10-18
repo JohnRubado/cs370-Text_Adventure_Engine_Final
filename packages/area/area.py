@@ -5,8 +5,7 @@ class Area:
         self.name = name
         self.transitions = []
         self.description = description
-
-
+        self.inAreaScripts = []
 
 
     def setDescription(self, description =""):

@@ -1,6 +1,6 @@
 {
     "player": {
-        "currentArea": "woods",
+        "currentArea": "quarry",
         "name": "Johnny",
         "description": "A young man"
     },
@@ -63,7 +63,7 @@
                     "isPassable": false,
                     "direction": "west",
                     "name": "cavern",
-                    "onFailure": "Too steep",
+                    "onFailure": "You try, but its too steep",
                     "area": "cave",
                     "destination": "woods",
                     "onSuccess": null,
