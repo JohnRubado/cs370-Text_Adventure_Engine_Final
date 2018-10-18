@@ -1,0 +1,89 @@
+{
+    "player": {
+        "currentArea": "quarry",
+        "name": "Johnny",
+        "description": "A young man"
+    },
+    "areas": [
+        {
+            "transitions": [
+                {
+                    "isPassable": true,
+                    "direction": "west",
+                    "name": "path",
+                    "onFailure": null,
+                    "area": "quarry",
+                    "destination": "woods",
+                    "onSuccess": null,
+                    "description": "Its covered with giant boulders."
+                },
+                {
+                    "isPassable": false,
+                    "direction": "south",
+                    "name": "waterfall",
+                    "onFailure": "The rocks are too slippery to go up.",
+                    "area": "quarry",
+                    "destination": "cave",
+                    "onSuccess": null,
+                    "description": "Its flowing very fast."
+                }
+            ],
+            "name": "quarry",
+            "description": "There are many rocks around here"
+        },
+        {
+            "transitions": [
+                {
+                    "isPassable": true,
+                    "direction": "north",
+                    "name": "path",
+                    "onFailure": null,
+                    "area": "woods",
+                    "destination": "quarry",
+                    "onSuccess": null,
+                    "description": "Its covered with giant boulders."
+                },
+                {
+                    "isPassable": true,
+                    "direction": "east",
+                    "name": "cavern",
+                    "onFailure": null,
+                    "area": "woods",
+                    "destination": "cave",
+                    "onSuccess": "You slide down the narrow cavern. You definitely can't get back out",
+                    "description": "Its narrow and dark inside, I wonder where it leads?"
+                }
+            ],
+            "name": "woods",
+            "description": "Many trees surround the area, wild animals can be heard"
+        },
+        {
+            "transitions": [
+                {
+                    "isPassable": false,
+                    "direction": "west",
+                    "name": "cavern",
+                    "onFailure": "You try, but its too steep",
+                    "area": "cave",
+                    "destination": "woods",
+                    "onSuccess": null,
+                    "description": "The light is beaming in from above, there must be another way out."
+                },
+                {
+                    "isPassable": true,
+                    "direction": "north",
+                    "name": "waterfall",
+                    "onFailure": null,
+                    "area": "cave",
+                    "destination": "quarry",
+                    "onSuccess": "You wake up gasping for air. You must have fallen out of the waterfall and hit your head.",
+                    "description": "Its flowing very fast."
+                }
+            ],
+            "name": "cave",
+            "description": "Its dark and wet"
+        }
+    ],
+    "name": "The Narrows",
+    "description": "An uncharted territory. Good Luck."
+}

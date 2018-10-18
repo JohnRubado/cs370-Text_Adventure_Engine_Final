@@ -3,19 +3,29 @@ class parser:
     def __init__(self, world):
         self.world = world
 
-    def start(self):
-        print "\nWelcome to " + self.world.name + ". " + self.world.description;
-        self.world.displayAreaDescription()
-        # self.world.loadScript()
+    def start(self,isNew):
+        if isNew:
+            print "\nWelcome to " + self.world.name + ". " + self.world.description;
+            if len(self.world.areas) > 0:
+                self.world.displayAreaDescription()
+        else:
+            print "Game loaded."
+            if len(self.world.areas) > 0:
+                self.world.displayAreaDescription()
+        self.world.loadScript()
         while(True):
             userInput = raw_input()
             print "";
             userInput = userInput.lower().split()
             moveKeywords = ["move","go", "use"]
             lookKeywords = ["look", "show"]
+<<<<<<< HEAD
             noiseWords = ["at", "am", "here", "there"]
             quitWords = ["quit"]
             helpWords = ["help"]
+=======
+            noiseWords = ["at", "am", "here", "there", "to"]
+>>>>>>> simple_scripting
             if len(userInput) == 0:
                 continue
             for word in noiseWords:
@@ -31,6 +41,7 @@ class parser:
                     self.world.look()
                 else:
                     self.world.look(argument)
+<<<<<<< HEAD
 
             elif userInput[0] in quitWords:
                 argument = ' '.join(userInput[1:])
@@ -39,5 +50,19 @@ class parser:
             elif userInput[0] in helpWords:
                 argument = ' '.join(userInput[1:])
                 self.world.helpUser()
+=======
+            elif userInput[0] == "save":
+                self.world.saveProgress()
+            elif userInput[0] == "load":
+                if len(userInput) == 2:
+                    loadFile = userInput[1]
+                    loadFile = "./" + loadFile
+                    if os.path.isfile(loadFile):
+                        self.world.loadGame(loadFile)
+                elif len(userInput) == 1:
+                    print "Must provide file name to load"
+
+
+>>>>>>> simple_scripting
             else:
                 print "I don't know " + userInput[0]
