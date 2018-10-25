@@ -63,4 +63,9 @@ outCavern.description = "The light is beaming in from above, there must be anoth
 inWaterfall.onSuccess = "You wake up gasping for air. You must have fallen out of the waterfall and hit your head."
 outWaterfall.onFailure= "The rocks are too slippery to go up."
 
+
+myWorld.newItem("rock", "it's a small rock", "quarry", False)
+myWorld.newItem("sword", "Yeah, that's a sword", "quarry", True)
+myWorld.newItem("pie", "Yum, yum, yum, a pie", "woods", True)
+
 myWorld.startGame()

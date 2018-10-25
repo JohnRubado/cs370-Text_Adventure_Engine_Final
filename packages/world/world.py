@@ -2,6 +2,7 @@ from packages.area.area import Area
 from packages.transition.transition import transition
 from packages.player.player import player
 from packages.parser.parser import parser
+from packages.item.item import item
 import json
 import time
 import sys
@@ -81,6 +82,42 @@ class World:
         else:
             raise Exception("Duplicate area " + name + " cannot be created.")
         return area
+
+    def newItem(self, name, description, area, isMoveable):
+
+        areaFound = self.areaExists(area)
+        if areaFound == False:
+            raise Exception("Area " + area + " does not exist")
+
+        areaItem = self.getArea(area)
+
+        item1 = item(name, description, area, isMoveable)
+        areaItem.newItem(item1)
+
+        return item1
+
+    def pickUpItem(self, item):
+        area = self.player.currentArea
+
+        self.player.addToInventory(item)
+
+
+
+    def checkInventory(self):
+        self.player.printInventory()
+
+    def dropItem(self, item):
+        area = self.player.currentArea
+
+        for items in self.player.inventory:
+            if item == items.name:
+                self.newItem(item, items.description, area.name, True)
+                self.player.dropFromInventory(item)
+                print("You have dropped: " + item)
+                return 0
+
+        print("Item does not exist in your Inventory to drop.")
+
 
     def newTransition(self, name, areaIn, destinationOut, isTwoWay, description = "It must lead somewhere"):
 
@@ -199,6 +236,14 @@ class World:
         else:
             print "You are everywhere and nowhere all at once. BUT HOW???"
 
+    #A method that allows for the player to quit the game when they want
+    def quitGame(self):
+        sys.exit(0)
+
+
+    #A method that gives user a help menu when they type out "help"
+    def helpUser(self):
+        print("To quit the game, simply type 'quit'")
     #method will be called when a player enters an area
     #it just displays the area they are in and the description of the area.
     def displayAreaDescription(self):
