@@ -1,5 +1,3 @@
-
-
 class item:
 
     def __init__(self, name, description, area, moveable):
@@ -14,5 +12,3 @@ class item:
             print( "You see a " + self.name + ". " + self.description + ". I think I can pick it up.")
         else:
             print( "You see a " + self.name + ". " + self.description)
-
-    
