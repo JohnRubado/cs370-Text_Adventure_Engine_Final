@@ -95,6 +95,28 @@ class World:
 
         return item1
 
+    def pickUpItem(self, item):
+        area = self.player.currentArea
+
+        self.player.addToInventory(item)
+
+
+
+    def checkInventory(self):
+        self.player.printInventory()
+
+    def dropItem(self, item):
+        area = self.player.currentArea
+
+        for items in self.player.inventory:
+            if item == items.name:
+                self.newItem(item, items.description, area.name, True)
+                self.player.dropFromInventory(item)
+                print("You have dropped: " + item)
+                return 0
+
+        print("Item does not exist in your Inventory to drop.")
+
 
     def newTransition(self, name, areaIn, destinationOut, isTwoWay, description = "It must lead somewhere"):
 

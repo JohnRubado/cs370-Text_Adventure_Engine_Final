@@ -1,3 +1,5 @@
+from packages.item.item import item
+
 class Area:
 
 
@@ -28,3 +30,12 @@ class Area:
             transition.printTrans(transition)
         for item in self.items:
             item.printItem(item)
+
+    def printItem(self):
+        for item in self.items:
+            item.printItem(item)
+
+    def removeItem(self, item):
+        for item1 in self.items:
+            if item == item1.name:
+                self.items.remove(item1)

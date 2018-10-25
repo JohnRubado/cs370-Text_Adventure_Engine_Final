@@ -22,7 +22,10 @@ class parser:
             noiseWords = ["at", "am", "here", "there"]
             quitWords = ["quit"]
             helpWords = ["help"]
-            noiseWords = ["at", "am", "here", "there", "to"]
+            takeWords = ["take", "pick"]
+            dropWords = ["drop"]
+            inventoryWords = ["inventory"]
+            noiseWords = ["at", "am", "here", "there", "to", "up"]
 
             if len(userInput) == 0:
                 continue
@@ -42,6 +45,15 @@ class parser:
             elif userInput[0] in quitWords:
                 argument = ' '.join(userInput[1:])
                 self.world.quitGame()
+            elif userInput[0] in takeWords:
+                argument = ' '.join(userInput[1:])
+                self.world.pickUpItem(argument)
+            elif userInput[0] in dropWords:
+                argument = ' '.join(userInput[1:])
+                self.world.dropItem(argument)
+            elif userInput[0] in inventoryWords:
+                argument = ' '.join(userInput[1:])
+                self.world.checkInventory()
             elif userInput[0] in helpWords:
                 argument = ' '.join(userInput[1:])
                 self.world.helpUser()

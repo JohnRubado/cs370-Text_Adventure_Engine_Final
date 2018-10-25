@@ -66,4 +66,7 @@ outWaterfall.onFailure= "The rocks are too slippery to go up."
 
 
 myWorld.newItem("rock", "it's a small rock", "quarry", False)
+myWorld.newItem("sword", "Yeah, that's a sword", "quarry", True)
+myWorld.newItem("pie", "Yum, yum, yum, a pie", "woods", True)
+
 myWorld.startGame()
