@@ -126,11 +126,57 @@ def lookTest():
     print "#################################### END lookTest ####################################"
 
 
+def saveLoadTests():
+
+    testWorld = World("Death Valley","A very dark and spooky place.", player("Johnny"))
+    testWorld.newArea("Woods", "A very dense forest, you can hear the birds.")
+    testWorld.newArea("Pond", "Its a deep pond, I cant see the bottom.")
+    testWorld.newTransition("path1",["Woods","  NorTh  "], ["Pond","eAsT"], True, "Its path1")
+    testWorld.newTransition("path2",["Woods","   SoUtH"], ["Pond","wEsT"], True, "Its path2")
+    testWorld.newTransition("path3",["Woods","   northeAst "], ["Pond","SouThEast"], True, "Its path3")
+
+
+    testWorld.saveProgress()
+
+    firstSave = open("./Johnny.txt", "r")
+    firstSave = firstSave.read()
+
+    testWorld.loadGame("Johnny.txt", True)
+    testWorld.saveProgress()
+
+    secondSave = open("./Johnny.txt", "r")
+    secondSave = secondSave.read()
+
+    firstSave, secondSave = json.dumps(firstSave, sort_keys=True), json.dumps(secondSave, sort_keys=True)
+
+
+    if firstSave == secondSave:
+        print "First save is equal to save after loading.\nNow the test will move the player and check the same equality."
+
+    testWorld.movePlayer("north")
+
+    testWorld.saveProgress()
+
+    firstSave = open("./Johnny.txt", "r")
+    firstSave = firstSave.read()
+
+    testWorld.loadGame("Johnny.txt", True)
+    testWorld.saveProgress()
+
+    secondSave = open("./Johnny.txt", "r")
+    secondSave = secondSave.read()
+
+    firstSave, secondSave = json.dumps(firstSave, sort_keys=True), json.dumps(secondSave, sort_keys=True)
+
+    if firstSave == secondSave:
+        print "First save is equal to save after moving player and loading.\nNow the test will attempt to open a broken file and see if it is handled."
+
+    testWorld.loadGame("brokensave.txt", True)
 
 def runTests():
-    newAreaTest()
-    newTransitionTest()
-    movePlayerTest()
-    lookTest()
-
+    #newAreaTest()
+    #newTransitionTest()
+    #movePlayerTest()
+    #lookTest()
+    saveLoadTests()
 runTests()

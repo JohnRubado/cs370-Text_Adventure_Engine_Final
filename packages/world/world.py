@@ -33,6 +33,7 @@ class World:
 
     #Serializes all of the world into JSON format for later loading
     def saveProgress(self):
+        print "Saving . . ."
         saveFile = open("./"+ self.player.name + ".txt", 'w+')
         world = {"name": self.name,
         "description":self.description,
@@ -210,12 +211,17 @@ class World:
         play.start(isNew)
 
     #calling this method loads a previous game from the JSON formatted file name given.
-    def loadGame(self, fileName):
+    def loadGame(self, fileName, testing = False):
 
         #read world data from file
-        with open(fileName) as f:
-            data = json.load(f)
+        try:
+            with open(fileName) as f:
+                data = json.load(f)
+        except:
+            print "Invalid file given. File must be txt file in JSON format."
+            return
 
+        print "Loading . . ."
         #redefining world properties
         self.areas = []
         self.player = player(data["player"]["name"],data["player"]["description"])
@@ -244,7 +250,9 @@ class World:
         self.player.description = data["player"]["description"]
         self.player.currentArea = self.getArea(data["player"]["currentArea"])
 
-        self.startGame(False)
+        if not testing:
+            self.startGame(False)
+
 
 
 # HELPER METHODS
