@@ -49,7 +49,6 @@ inPath, outPath = myWorld.newTransition("path",["quarry", "west"], ["woods", "no
 inCavern, outCavern = myWorld.newTransition("cavern",["woods", "east"], ["cave", "west"], False, "Its narrow and dark inside, I wonder where it leads?")
 inWaterfall, outWaterfall = myWorld.newTransition("waterfall",["cave", "north"], ["quarry", "south"], False, "Its flowing very fast.")
 
-
 #SETTING SOME SCRIPTS TO BE EXECUTED
 inWaterfall.onSuccessScripts.append(fallScript)
 inWaterfall.onSuccessScripts.append(fallPicture)

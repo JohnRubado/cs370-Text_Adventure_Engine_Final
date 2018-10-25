@@ -1,6 +1,6 @@
 {
     "player": {
-        "currentArea": "Pond",
+        "currentArea": "Woods",
         "name": "Johnny",
         "description": ""
     },
@@ -27,7 +27,7 @@
                     "onSuccess": null,
                     "description": "Its path2"
                 },
-                {
+
                     "isPassable": true,
                     "direction": "northeast",
                     "name": "path3",
@@ -41,9 +41,9 @@
             "name": "Woods",
             "description": "A very dense forest, you can hear the birds."
         },
-        {
-            "transitions": [
-                {
+
+            "transitions":
+
                     "isPassable": true,
                     "direction": "east",
                     "name": "path1",
@@ -52,8 +52,8 @@
                     "destination": "Woods",
                     "onSuccess": null,
                     "description": "Its path1"
-                },
-                {
+                }
+
                     "isPassable": true,
                     "direction": "west",
                     "name": "path2",
@@ -72,12 +72,11 @@
                     "destination": "Woods",
                     "onSuccess": null,
                     "description": "Its path3"
-                }
-            ],
+
+            ]
             "name": "Pond",
             "description": "Its a deep pond, I cant see the bottom."
-        }
-    ],
+
+    ]
     "name": "Death Valley",
     "description": "A very dark and spooky place."
-}
