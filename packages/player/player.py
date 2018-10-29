@@ -17,21 +17,35 @@ class player:
 
     def addToInventory(self, targetItem):
         area1 = self.currentArea
+        itemObj = None
         for item in area1.items:
-            if targetItem == item.name and item.moveable == True:
-                self.inventory.append(item)
-                print("You picked up: " + targetItem)
-                area1.removeItem(targetItem)
-                return 0
-        print("You could not pick up: " + targetItem)
+            if targetItem == item.name:
+
+                if item.moveable == True:
+                    itemObj = item
+
+                    self.inventory.append(item)
+                    if item.onSuccess == None:
+                        print("You picked up the " + targetItem)
+                    else:
+                        print(item.onSuccess)
+                    area1.removeItem(item)
+                else:
+                    if item.onFailure == None:
+                        print("You cannot take the " + targetItem)
+                    else:
+                        print(item.onFailure)
+                return
+
+        print "There is no " + targetItem
 
     def dropFromInventory(self, item):
-        for items in self.inventory:
-            if item == items.name:
-                self.inventory.remove(items)
-
-
+        item.area = self.currentArea
+        self.inventory.remove(item)
 
     def printInventory(self):
-        for item in self.inventory:
-            print(item.name + ": " + item.description)
+        if len(self.inventory) != 0:
+            for item in self.inventory:
+                print(item.name + " - " + item.description)
+        else:
+            print "[Empty]"

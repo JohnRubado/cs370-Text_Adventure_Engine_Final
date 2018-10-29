@@ -1,41 +1,51 @@
 from packages.world.world import *;
+from packages.player.player import player
 
+#LIBRARIES INCLUDED BY AUTHOR
 from pygame import *
 from PIL import Image
 
 mixer.init()
 
 def onLoadScript():
-     birds = mixer.Sound("sounds/birds.wav")
+     birds = mixer.Sound("./sounds/birds.wav")
      birds.play()
 
 def waterfallScript():
-    cave = mixer.Sound("sounds/waterfall.wav")
+    cave = mixer.Sound("./sounds/waterfall.wav")
     cave.play()
 def fallScript():
-    fall = mixer.Sound("sounds/manfall.wav")
+    fall = mixer.Sound("./sounds/manfall.wav")
     fall.play()
 
 def pathScript():
-    walking = mixer.Sound("sounds/walking.wav")
+    walking = mixer.Sound("./sounds/walking.wav")
     walking.play()
 
 def fallPicture():
-    image = Image.open("pictures/fallPic.png")
+    image = Image.open("./pictures/fallPic.png")
     image.show()
 
 
 
-
+# TODO:
+# Extend save tests to include: scripts, and items
+# Add tests for inventory functionality.
+# Add item scripts
+# MAJOR PROBLEM
+#   After the project is built and distributable, how are we going
+#   to allow for added python scripts once it is already built?
+#   it would be up to the author to rebuild the project once theyve made a world..
+#   we REALLY do not want that.
 
 
 #
-# player = player("NOOB", "THE NOOBEST")
-# myWorld = World("BLANK WORLD", "BLANKEST OF WORLDS")
+# thePlayer = player("NOOB", "THE NOOBEST")
+# myWorld = World("BLANK WORLD", "BLANKEST OF WORLDS",thePlayer)
 
 #CREATE THE WORLD AND THE PLAYER
-player = player("Johnny", "A young man")
-myWorld = World("The Narrows","An uncharted territory. Good Luck.",player,onLoadScript);
+thePlayer = player("Johnny", "A young man")
+myWorld = World("The Narrows","An uncharted territory. Good Luck.",thePlayer,onLoadScript);
 
 #CREATE SOME AREAS
 quarry = myWorld.newArea("quarry", "Placeholder description")
@@ -54,6 +64,7 @@ inWaterfall.onSuccessScripts.append(fallScript)
 inWaterfall.onSuccessScripts.append(fallPicture)
 inPath.onSuccessScripts.append(pathScript)
 outPath.onSuccessScripts.append(pathScript)
+
 #SET MESSAGES TO BE DISPLAYED ON SUCCESS OR FAILURE
 inCavern.onSuccess = "You slide down the narrow cavern. You definitely can't get back out"
 outCavern.onFailure = "You try, but its too steep"
@@ -64,8 +75,12 @@ inWaterfall.onSuccess = "You wake up gasping for air. You must have fallen out o
 outWaterfall.onFailure= "The rocks are too slippery to go up."
 
 
-myWorld.newItem("rock", "it's a small rock", "quarry", False)
-myWorld.newItem("sword", "Yeah, that's a sword", "quarry", True)
-myWorld.newItem("pie", "Yum, yum, yum, a pie", "woods", True)
+rock = myWorld.newItem("rock", "it's an ugly small rock", "quarry", False)
+rock.onFailure = "Its a pretty lame rock, you decide not to carry such dead weight."
+
+sword = myWorld.newItem("sword", "A dull longsword", "quarry", True)
+sword.onSuccess = "You take the sword, its a bit dull but it should do the job."
+
+myWorld.newItem("pie", "A warm pie, someone must have left this here.", "woods", True)
 
 myWorld.startGame()

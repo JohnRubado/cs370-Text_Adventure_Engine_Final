@@ -6,21 +6,11 @@ from packages.item.item import item
 import json
 import time
 import sys
+import dill as pickle
 
 
 
 class World:
-
-    NORTH = 1
-    SOUTH = 2
-    EAST = 3
-    WEST = 4
-    UP = 5
-    DOWN = 6
-    NORTH_EAST = 7
-    SOUTH_EAST = 8
-    SOUTH_WEST = 9
-    NORTH_WEST = 10
 
 
     #AUTHOR METHODS
@@ -34,18 +24,33 @@ class World:
 
     #Serializes all of the world into JSON format for later loading
     def saveProgress(self):
-        print "Saving . . ."
-        saveFile = open("./"+ self.player.name + ".txt", 'w+')
+        saveFile = open("./"+ self.player.name + ".txt", 'wb')
+        print "Saving . . . "
         world = {"name": self.name,
         "description":self.description,
         "areas": [],
         "player": {"name": self.player.name,
         "description":self.player.description,
-        "currentArea":self.player.currentArea.name}}
+        "currentArea":self.player.currentArea.name,
+        "inventory":[]}}
+
+        #save items in players inventory
+        for item in self.player.inventory:
+            currItem = {"name":item.name,
+                        "description":item.description,
+                        "area":None,
+                        "moveable": item.moveable,
+                        "onSuccess": item.onSuccess,
+                        "onFailure": item.onFailure,
+                        }
+            world["player"]["inventory"].append(currItem)
+
+        #save all the areas their transitions, and their items.
         for area in self.areas:
             currArea = {"name" : area.name,
             "description": area.description,
-            "transitions": []}
+            "transitions": [],
+            "items": []}
             for transition in area.transitions:
                 currTransition = {"name": transition.name,
                 "direction": transition.direction,
@@ -54,13 +59,34 @@ class World:
                 "onFailure": transition.onFailure,
                 "destination": transition.destination.name,
                 "area": transition.area.name,
-                "description":transition.description}
+                "description":transition.description,
+                "onSuccessScripts": [],
+                "onFailureScripts": []}
+                #serializing scripts with pickle and saving them in the JSON file.
+                for script in transition.onSuccessScripts:
+                    serScript = pickle.dumps(script)
+                    currScript = {"script": serScript}
+                    currTransition["onSuccessScripts"].append(currScript)
+                for script in transition.onFailureScripts:
+                    serScript = pickle.dumps(script)
+                    currScript = {"script": script}
+                    currTransition["onFailureScripts"].append(currScript)
                 currArea["transitions"].append(currTransition)
+            for item in area.items:
+                currItem = {"name":item.name,
+                            "description":item.description,
+                            "area":area.name,
+                            "moveable": item.moveable,
+                            "onSuccess": item.onSuccess,
+                            "onFailure": item.onFailure,
+                            }
+                currArea["items"].append(currItem)
             world["areas"].append(currArea)
 
 
-        world = json.dumps(world,indent=4, separators=(',', ': '))
-        saveFile.write(world)
+
+        world = pickle.dump(world,saveFile)
+        #world = json.dumps(world,indent=4, separators=(',', ': '))
         saveFile.close()
         print "Progress saved in " + self.player.name + ".txt"
 
@@ -68,7 +94,6 @@ class World:
         #     for transition in area["transitions"]:
         #         print transition["name"] + " in " + transition["area"]
         #print world
-
 
     #Creates a new area unless one with the given name already exists
     #Returns the area object to the author.
@@ -106,17 +131,17 @@ class World:
     def checkInventory(self):
         self.player.printInventory()
 
-    def dropItem(self, item):
+    def dropItem(self, targetItem):
         area = self.player.currentArea
 
-        for items in self.player.inventory:
-            if item == items.name:
-                self.newItem(item, items.description, area.name, True)
+        for item in self.player.inventory:
+            if targetItem == item.name:
+                self.newItem(item.name, item.description, area.name, True)
                 self.player.dropFromInventory(item)
-                print("You have dropped: " + item)
-                return 0
+                print("You drop the " + item.name)
+                return
 
-        print("Item does not exist in your Inventory to drop.")
+        print("You do not have a " + targetItem)
 
 
     def newTransition(self, name, areaIn, destinationOut, isTwoWay, description = "It must lead somewhere"):
@@ -219,18 +244,43 @@ class World:
                     print "You cannot traverse the " + transition.name
                 else:
                     print transition.onFailure
-                if transition.onFailScripts != []:
+                if transition.onFailureScripts != []:
                     for script in transition.onFailureScripts:
                         script()
 
     #Method will be called when player types look
     #Displays everything in the room
     def look(self, target = ""):
+        isItem = False
+        isTransition = False
+
         if len(self.areas) != 0:
+
+            #Check if the target is an existing item near the player or in their inventory.
+            #Or if the target is an existing transition
+            for item in self.player.currentArea.items:
+                if self.trimDirectionString(target) == item.name:
+                    isItem = True
+                    theItem = item
+            #checking inventory of player
+            for item in self.player.inventory:
+                if self.trimDirectionString(target) == item.name:
+                    isItem = True
+                    theItem = item
+            #checking transitions in area
+            for transition in self.player.currentArea.transitions:
+                if self.trimDirectionString(target) == transition.name:
+                    isTransition = True
+                    theTransition = transition
+
             if target == "":
                 self.player.currentArea.printArea()
             elif target == "me":
-                self.player.printPlayer()
+                self.player.printplayer()
+            elif isItem:
+                theItem.printItem()
+            elif isTransition:
+                theTransition.printTrans()
             else:
                 print "You dont see a " + target
         else:
@@ -255,18 +305,22 @@ class World:
         play = parser(self)
         play.start(isNew)
 
-    #calling this method loads a previous game from the JSON formatted file name given.
+    #calling this method loads a previous game from the save file given. Save file
+    #should have been constructed with pickle.
     def loadGame(self, fileName, testing = False):
 
         #read world data from file
         try:
-            with open(fileName) as f:
-                data = json.load(f)
+
+            with open(fileName, "rb") as f:
+                data = pickle.load(f)
+            print "HERE"
         except:
-            print "Invalid file given. File must be txt file in JSON format."
+            print "Invalid file given. File should be created from typing save in game"
             return
 
         print "Loading . . ."
+
         #redefining world properties
         self.areas = []
         self.player = player(data["player"]["name"],data["player"]["description"])
@@ -283,17 +337,34 @@ class World:
             self.newArea(area["name"],area["description"])
 
 
-        #with the area objects we can now make the desired transitions and set the players currentArea property
+        #set the players properties.
+        self.player.name = data["player"]["name"]
+        self.player.description = data["player"]["description"]
+        self.player.currentArea = self.getArea(data["player"]["currentArea"])
+
+        #with the area objects we can now make the desired transitions, and items
         for area in data["areas"]:
             for transitionMap in area["transitions"]:
                 newTrans = transition(transitionMap["name"],self.getArea(transitionMap["area"]),transitionMap["direction"],self.getArea(transitionMap["destination"]), transitionMap["isPassable"],transitionMap["description"])
                 newTrans.onSuccess = transitionMap["onSuccess"]
                 newTrans.onFailure = transitionMap["onFailure"]
+                for script in transitionMap["onSuccessScripts"]:
+                    currScript = pickle.loads(script["script"])
+                    newTrans.onSuccessScripts.append(currScript)
                 newTrans.area.transitions.append(newTrans)
+            for itemMap in area["items"]:
+                newItem = self.newItem(itemMap["name"], itemMap["description"], area["name"], itemMap["moveable"])
+                newItem.onSuccess = itemMap["onSuccess"]
+                newItem.onFailure = itemMap["onFailure"]
 
-        self.player.name = data["player"]["name"]
-        self.player.description = data["player"]["description"]
-        self.player.currentArea = self.getArea(data["player"]["currentArea"])
+
+
+        for playerItem in data["player"]["inventory"]:
+            newItem = item(playerItem["name"], playerItem["description"], None, playerItem["moveable"])
+            newItem.onSuccess = itemMap["onSuccess"]
+            newItem.onFailure = itemMap["onFailure"]
+            self.player.inventory.append(newItem)
+
 
         if not testing:
             self.startGame(False)
