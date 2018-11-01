@@ -27,16 +27,19 @@ def fallPicture():
     image = Image.open("./pictures/fallPic.png")
     image.show()
 
+def swordScript():
+    print "HELLO"
+
 
 
 # TODO:
-# Extend save tests to include: scripts, and items
 # Add tests for inventory functionality.
-# Add item scripts
+# Complete design doc with ability to map tests to it.
 
 
 
-# #
+
+#
 # thePlayer = player("NOOB", "THE NOOBEST")
 # myWorld = World("BLANK WORLD", "BLANKEST OF WORLDS",thePlayer)
 
@@ -79,7 +82,7 @@ rock.onFailure = "Its a pretty lame rock, you decide not to carry such dead weig
 sword = myWorld.newItem("sword", "A dull longsword", "quarry")
 sword.onSuccess = "You take the sword, its a bit dull but it should do the job."
 sword.detailedDescription = "As you look closely, you see old dried blood along the edge."
-
+sword.onSuccessScripts.append(swordScript)
 pie = myWorld.newItem("pie", "A warm pie, I wonder who made it?", "woods")
 pie.detailedDescription = "A closer look reveals that the ants must have found it first.."
 

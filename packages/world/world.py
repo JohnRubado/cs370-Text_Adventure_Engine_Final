@@ -42,7 +42,17 @@ class World:
                         "moveable": item.moveable,
                         "onSuccess": item.onSuccess,
                         "onFailure": item.onFailure,
+                        "onSuccessScripts": [],
+                        "onFailureScripts": []
                         }
+            for script in item.onSuccessScripts:
+                serScript = pickle.dumps(script)
+                currScript = {"script": serScript}
+                currItem["onSuccessScripts"].append(currScript)
+            for script in item.onFailureScripts:
+                serScript = pickle.dumps(script)
+                currScript = {"script": serScript}
+                currItem["onFailureScripts"].append(currScript)
             world["player"]["inventory"].append(currItem)
 
         #save all the areas their transitions, and their items.
@@ -148,8 +158,8 @@ class World:
 
         for item in self.player.inventory:
             if targetItem == item.name:
-                self.newItem(item.name, item.description, area.name, True)
                 self.player.dropFromInventory(item)
+                self.player.currentArea.items.append(item)
                 print("You drop the " + item.name)
                 return
 
@@ -243,6 +253,8 @@ class World:
                     print transition.onSuccess
 
                 #if there is a script to be executed
+
+
                 if transition.onSuccessScripts != []:
                     for script in transition.onSuccessScripts:
                         script()
@@ -365,6 +377,8 @@ class World:
         for area in data["areas"]:
             for transitionMap in area["transitions"]:
                 newTrans = transition(transitionMap["name"],self.getArea(transitionMap["area"]),transitionMap["direction"],self.getArea(transitionMap["destination"]), transitionMap["isPassable"],transitionMap["description"])
+                newTrans.onSuccesScripts = []
+                newTrans.onFailureScripts = []
                 newTrans.onSuccess = transitionMap["onSuccess"]
                 newTrans.onFailure = transitionMap["onFailure"]
                 newTrans.detailedDescription = transitionMap["detailedDescription"]
@@ -373,7 +387,7 @@ class World:
                     currScript = pickle.loads(script["script"])
                     newTrans.onSuccessScripts.append(currScript)
 
-                for script in transitionMap["onSuccessScripts"]:
+                for script in transitionMap["onFailureScripts"]:
                     currScript = pickle.loads(script["script"])
                     newTrans.onSuccessScripts.append(currScript)
 
@@ -386,7 +400,7 @@ class World:
                 newItem.onFailure = itemMap["onFailure"]
                 newItem.detailedDescription = itemMap["detailedDescription"]
 
-                #loading scripts
+                #loading scripts for area items
                 for script in itemMap["onSuccessScripts"]:
                     currScript = pickle.loads(script["script"])
                     newItem.onSuccessScripts.append(currScript)
@@ -395,11 +409,17 @@ class World:
                     newItem.onFailureScripts.append(currScript)
 
 
-
-        for playerItem in data["player"]["inventory"]:
-            newItem = item(playerItem["name"], playerItem["description"], None, playerItem["moveable"])
+        #Loading the inventory
+        for itemMap in data["player"]["inventory"]:
+            newItem = item(itemMap["name"], itemMap["description"], None, itemMap["moveable"])
             newItem.onSuccess = itemMap["onSuccess"]
             newItem.onFailure = itemMap["onFailure"]
+            for script in itemMap["onSuccessScripts"]:
+                currScript = pickle.loads(script["script"])
+                newItem.onSuccessScripts.append(currScript)
+            for script in itemMap["onFailureScripts"]:
+                currScript = pickle.loads(script["script"])
+                newItem.onFailureScripts.append(currScript)
             self.player.inventory.append(newItem)
 
 

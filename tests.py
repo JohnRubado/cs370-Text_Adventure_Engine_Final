@@ -140,24 +140,13 @@ def saveLoadTests():
     def scriptTwo():
         print "Script two ran"
 
-    def scriptThree():
-        print "Script three ran"
-
-    def scriptFour():
-        print "Script four ran"
-
-    def scriptFive():
-        print "Script five ran"
-
-    def scriptSix():
-        print "Script six ran"
 
     testWorld = World("Death Valley","A very dark and spooky place.", player("Johnny"))
     testWorld.newArea("Woods", "A very dense forest, you can hear the birds.")
     testWorld.newArea("Pond", "Its a deep pond, I cant see the bottom.")
-    testWorld.newTransition("path1",["Woods","  NorTh  "], ["Pond","eAsT"], True, "Its path1")
-    testWorld.newTransition("path2",["Woods","   SoUtH"], ["Pond","wEsT"], True, "Its path2")
-    testWorld.newTransition("path3",["Woods","   northeAst "], ["Pond","SouThEast"], True, "Its path3")
+    inPath1, outPath1 = testWorld.newTransition("path1",["Woods","  NorTh  "], ["Pond","eAsT"], True, "Its path1")
+    inPath2, outPath2= testWorld.newTransition("path2",["Woods","   SoUtH"], ["Pond","wEsT"], True, "Its path2")
+    inPath3, outPath3 = testWorld.newTransition("path3",["Woods","   northeAst "], ["Pond","SouThEast"], True, "Its path3")
 
 
     testWorld.saveProgress()
@@ -204,8 +193,8 @@ def saveLoadTests():
     ########################################################################################
     print "SUCCESS - Now the test will add items to the world and players inventory and tests for equality of saves."
 
-    testWorld.newItem("itemOne","one", "Woods", True)
-    testWorld.newItem("itemTwo", "two", "Woods", False)
+    itemOne = testWorld.newItem("itemOne","one", "Woods", True)
+    itemTwo = testWorld.newItem("itemTwo", "two", "Woods", False)
     testWorld.newItem("itemThree", "three", "Pond", True)
     testWorld.newItem("itemFour", "four", "Pond", False)
     testWorld.newItem("itemFive", "five", "Pond", True)
@@ -232,19 +221,42 @@ def saveLoadTests():
 
 
     if firstSave == secondSave:
-        print "SUCCESS - First save is equal to save after adding items to world and to player inventory, and  then moving player.\nNow the test will attempt to add scripts to all these items and transitions to check for equality between saves."
+        print "SUCCESS - First save is equal to save after adding items to world and to player inventory, and  then moving player.\nNow the test will attempt to add scripts to all these items and transitions to check for equality between saves.\nExpect scriptOne and scriptTwo messages before and after loading."
     else:
         print "FAIL - Saves not equal"
 
     ########################################################################################
 
+    for area in testWorld.areas:
+        for transition in area.transitions:
+            transition.onSuccessScripts.append(scriptOne)
+        for item in area.items:
+            item.onSuccessScripts.append(scriptTwo)
 
 
+    testWorld.pickUpItem("itemOne")
+    testWorld.movePlayer("path1")
 
+    testWorld.saveProgress()
+    firstSave = open("./Johnny.txt", "r")
+    firstSave = firstSave.read()
 
+    testWorld.loadGame("Johnny.txt", True)
 
+    testWorld.saveProgress()
+    secondSave = open("./Johnny.txt", "r")
+    secondSave = secondSave.read()
 
+    testWorld.dropItem("itemOne")
+    testWorld.pickUpItem("itemOne")
+    testWorld.movePlayer("path1")
 
+    firstSave, secondSave = pickle.dumps(firstSave), pickle.dumps(secondSave)
+
+    if firstSave == secondSave:
+        print "SUCCESS - First save is equal to save after adding scripts to objects, interacting with those objects and saving."
+    else:
+        print "FAIL - Saves not equal"
 
 #def inventoryTests():
 
