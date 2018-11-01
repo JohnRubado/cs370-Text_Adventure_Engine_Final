@@ -1,5 +1,5 @@
 from packages.world.world import *;
-from packages.player.player import player
+
 
 #LIBRARIES INCLUDED BY AUTHOR
 from pygame import *
@@ -14,6 +14,7 @@ def onLoadScript():
 def waterfallScript():
     cave = mixer.Sound("./sounds/waterfall.wav")
     cave.play()
+
 def fallScript():
     fall = mixer.Sound("./sounds/manfall.wav")
     fall.play()
@@ -32,14 +33,10 @@ def fallPicture():
 # Extend save tests to include: scripts, and items
 # Add tests for inventory functionality.
 # Add item scripts
-# MAJOR PROBLEM
-#   After the project is built and distributable, how are we going
-#   to allow for added python scripts once it is already built?
-#   it would be up to the author to rebuild the project once theyve made a world..
-#   we REALLY do not want that.
 
 
-#
+
+# #
 # thePlayer = player("NOOB", "THE NOOBEST")
 # myWorld = World("BLANK WORLD", "BLANKEST OF WORLDS",thePlayer)
 
@@ -67,6 +64,7 @@ outPath.onSuccessScripts.append(pathScript)
 
 #SET MESSAGES TO BE DISPLAYED ON SUCCESS OR FAILURE
 inCavern.onSuccess = "You slide down the narrow cavern. You definitely can't get back out"
+inCavern.detailedDescription = "You see a lot of rat poop."
 outCavern.onFailure = "You try, but its too steep"
 outCavern.description = "The light is beaming in from above, there must be another way out."
 
@@ -78,9 +76,11 @@ outWaterfall.onFailure= "The rocks are too slippery to go up."
 rock = myWorld.newItem("rock", "it's an ugly small rock", "quarry", False)
 rock.onFailure = "Its a pretty lame rock, you decide not to carry such dead weight."
 
-sword = myWorld.newItem("sword", "A dull longsword", "quarry", True)
+sword = myWorld.newItem("sword", "A dull longsword", "quarry")
 sword.onSuccess = "You take the sword, its a bit dull but it should do the job."
+sword.detailedDescription = "As you look closely, you see old dried blood along the edge."
 
-myWorld.newItem("pie", "A warm pie, someone must have left this here.", "woods", True)
+pie = myWorld.newItem("pie", "A warm pie, I wonder who made it?", "woods")
+pie.detailedDescription = "A closer look reveals that the ants must have found it first.."
 
 myWorld.startGame()

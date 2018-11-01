@@ -60,9 +60,10 @@ class World:
                 "destination": transition.destination.name,
                 "area": transition.area.name,
                 "description":transition.description,
+                "detailedDescription":transition.detailedDescription,
                 "onSuccessScripts": [],
                 "onFailureScripts": []}
-                #serializing scripts with pickle and saving them in the JSON file.
+                #serializing scripts with pickle.
                 for script in transition.onSuccessScripts:
                     serScript = pickle.dumps(script)
                     currScript = {"script": serScript}
@@ -75,11 +76,22 @@ class World:
             for item in area.items:
                 currItem = {"name":item.name,
                             "description":item.description,
+                            "detailedDescription":item.detailedDescription,
                             "area":area.name,
                             "moveable": item.moveable,
                             "onSuccess": item.onSuccess,
                             "onFailure": item.onFailure,
-                            }
+                            "onSuccessScripts": [],
+                            "onFailureScripts": [],}
+                for script in item.onSuccessScripts:
+                    serScript = pickle.dumps(script)
+                    currScript = {"script": serScript}
+                    currItem["onSuccessScripts"].append(currScript)
+                for script in item.onFailureScripts:
+                    serScript = pickle.dumps(script)
+                    currScript = {"script": serScript}
+                    currItem["onFailureScripts"].append(currScript)
+
                 currArea["items"].append(currItem)
             world["areas"].append(currArea)
 
@@ -108,7 +120,7 @@ class World:
             raise Exception("Duplicate area " + name + " cannot be created.")
         return area
 
-    def newItem(self, name, description, area, isMoveable):
+    def newItem(self, name, description, area, isMoveable = True):
 
         areaFound = self.areaExists(area)
         if areaFound == False:
@@ -123,8 +135,8 @@ class World:
 
     def pickUpItem(self, item):
         area = self.player.currentArea
-
         self.player.addToInventory(item)
+
 
 
 
@@ -267,6 +279,7 @@ class World:
                 if self.trimDirectionString(target) == item.name:
                     isItem = True
                     theItem = item
+
             #checking transitions in area
             for transition in self.player.currentArea.transitions:
                 if self.trimDirectionString(target) == transition.name:
@@ -278,9 +291,15 @@ class World:
             elif target == "me":
                 self.player.printplayer()
             elif isItem:
-                theItem.printItem()
+                if theItem.detailedDescription == None:
+                    theItem.printDescription()
+                else:
+                    print theItem.detailedDescription
             elif isTransition:
-                theTransition.printTrans()
+                if theTransition.detailedDescription == None:
+                    theTransition.printDescription()
+                else:
+                    print theTransition.detailedDescription
             else:
                 print "You dont see a " + target
         else:
@@ -293,7 +312,8 @@ class World:
 
     #A method that gives user a help menu when they type out "help"
     def helpUser(self):
-        print("To quit the game, simply type 'quit'")
+        print "To quit the game, simply type 'quit'"
+        print "To save or load type, 'save' or 'load [filename]'"
     #method will be called when a player enters an area
     #it just displays the area they are in and the description of the area.
     def displayAreaDescription(self):
@@ -311,10 +331,8 @@ class World:
 
         #read world data from file
         try:
-
             with open(fileName, "rb") as f:
                 data = pickle.load(f)
-            print "HERE"
         except:
             print "Invalid file given. File should be created from typing save in game"
             return
@@ -323,7 +341,8 @@ class World:
 
         #redefining world properties
         self.areas = []
-        self.player = player(data["player"]["name"],data["player"]["description"])
+        self.player = player(data["player"]["name"],data["player"]["description"], [])
+
         self.name = data["name"]
         self.description = data["description"]
 
@@ -348,14 +367,32 @@ class World:
                 newTrans = transition(transitionMap["name"],self.getArea(transitionMap["area"]),transitionMap["direction"],self.getArea(transitionMap["destination"]), transitionMap["isPassable"],transitionMap["description"])
                 newTrans.onSuccess = transitionMap["onSuccess"]
                 newTrans.onFailure = transitionMap["onFailure"]
+                newTrans.detailedDescription = transitionMap["detailedDescription"]
+
                 for script in transitionMap["onSuccessScripts"]:
                     currScript = pickle.loads(script["script"])
                     newTrans.onSuccessScripts.append(currScript)
+
+                for script in transitionMap["onSuccessScripts"]:
+                    currScript = pickle.loads(script["script"])
+                    newTrans.onSuccessScripts.append(currScript)
+
                 newTrans.area.transitions.append(newTrans)
+
+            #Loading items from save file
             for itemMap in area["items"]:
                 newItem = self.newItem(itemMap["name"], itemMap["description"], area["name"], itemMap["moveable"])
                 newItem.onSuccess = itemMap["onSuccess"]
                 newItem.onFailure = itemMap["onFailure"]
+                newItem.detailedDescription = itemMap["detailedDescription"]
+
+                #loading scripts
+                for script in itemMap["onSuccessScripts"]:
+                    currScript = pickle.loads(script["script"])
+                    newItem.onSuccessScripts.append(currScript)
+                for script in itemMap["onFailureScripts"]:
+                    currScript = pickle.loads(script["script"])
+                    newItem.onFailureScripts.append(currScript)
 
 
 
@@ -364,6 +401,9 @@ class World:
             newItem.onSuccess = itemMap["onSuccess"]
             newItem.onFailure = itemMap["onFailure"]
             self.player.inventory.append(newItem)
+
+
+
 
 
         if not testing:

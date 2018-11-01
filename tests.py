@@ -23,6 +23,10 @@ def newTransitionTest():
 
     #testing creation of valid transitions
     testWorld = World("Death Valley","A very dark and spooky place.", player("Johnny"))
+
+
+
+    #Now creating the areas.
     testWorld.newArea("Woods", "A very dense forest, you can hear the birds.")
     testWorld.newArea("Pond", "Its a deep pond, I cant see the bottom.")
 
@@ -125,8 +129,28 @@ def lookTest():
 
     print "#################################### END lookTest ####################################"
 
-
+#This test will create a world and ensure that loading a saved world will be an exact copy of the world that was saved.
+#It will then put some items into the players inventory and in the world and save, testing for a replica after loading.
+#Finally it will add scripts to all existing elements, then save, then test for an exact replica again.
 def saveLoadTests():
+
+    def scriptOne():
+        print "Script one ran"
+
+    def scriptTwo():
+        print "Script two ran"
+
+    def scriptThree():
+        print "Script three ran"
+
+    def scriptFour():
+        print "Script four ran"
+
+    def scriptFive():
+        print "Script five ran"
+
+    def scriptSix():
+        print "Script six ran"
 
     testWorld = World("Death Valley","A very dark and spooky place.", player("Johnny"))
     testWorld.newArea("Woods", "A very dense forest, you can hear the birds.")
@@ -147,11 +171,14 @@ def saveLoadTests():
     secondSave = open("./Johnny.txt", "r")
     secondSave = secondSave.read()
 
-    firstSave, secondSave = json.dumps(firstSave, sort_keys=True), json.dumps(secondSave, sort_keys=True)
+    firstSave, secondSave = pickle.dumps(firstSave), pickle.dumps(secondSave)
 
 
     if firstSave == secondSave:
-        print "First save is equal to save after loading.\nNow the test will move the player and check the same equality."
+        print "SUCCESS - First save is equal to save after loading.\nNow the test will move the player and check the same equality."
+    else:
+        print "FAIL - Saves not equal"
+    ########################################################################################
 
     testWorld.movePlayer("north")
 
@@ -166,12 +193,60 @@ def saveLoadTests():
     secondSave = open("./Johnny.txt", "r")
     secondSave = secondSave.read()
 
-    firstSave, secondSave = json.dumps(firstSave, sort_keys=True), json.dumps(secondSave, sort_keys=True)
+    firstSave, secondSave = pickle.dumps(firstSave), pickle.dumps(secondSave)
 
     if firstSave == secondSave:
-        print "First save is equal to save after moving player and loading.\nNow the test will attempt to open a broken file and see if it is handled."
-
+        print "SUCCESS - First save is equal to save after moving player and loading.\nNow the test will attempt to open a broken file and see if it is handled."
+    else:
+        print "FAIL - Saves not equal"
+    ########################################################################################
     testWorld.loadGame("brokensave.txt", True)
+    ########################################################################################
+    print "SUCCESS - Now the test will add items to the world and players inventory and tests for equality of saves."
+
+    testWorld.newItem("itemOne","one", "Woods", True)
+    testWorld.newItem("itemTwo", "two", "Woods", False)
+    testWorld.newItem("itemThree", "three", "Pond", True)
+    testWorld.newItem("itemFour", "four", "Pond", False)
+    testWorld.newItem("itemFive", "five", "Pond", True)
+    testWorld.newItem("itemSix", "six", "Pond", False)
+    testWorld.pickUpItem("itemFive")
+
+
+    testWorld.movePlayer("east")
+
+
+    testWorld.saveProgress()
+    firstSave = open("./Johnny.txt", "r")
+    firstSave = firstSave.read()
+
+    testWorld.loadGame("Johnny.txt", True)
+
+    testWorld.saveProgress()
+    secondSave = open("./Johnny.txt", "r")
+    secondSave = secondSave.read()
+
+
+
+    firstSave, secondSave = pickle.dumps(firstSave), pickle.dumps(secondSave)
+
+
+    if firstSave == secondSave:
+        print "SUCCESS - First save is equal to save after adding items to world and to player inventory, and  then moving player.\nNow the test will attempt to add scripts to all these items and transitions to check for equality between saves."
+    else:
+        print "FAIL - Saves not equal"
+
+    ########################################################################################
+
+
+
+
+
+
+
+
+
+#def inventoryTests():
 
 def runTests():
     #newAreaTest()

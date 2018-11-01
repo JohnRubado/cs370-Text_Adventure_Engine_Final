@@ -1,8 +1,9 @@
 class item:
 
-    def __init__(self, name, description, area, moveable):
+    def __init__(self, name, description, area, moveable = True):
         self.name = name
         self.description = description
+        self.detailedDescription = None
         self.area = area
         self.moveable = moveable
         self.onSuccess = None
@@ -11,5 +12,5 @@ class item:
         self.onFailureScripts = []
 
 
-    def printItem(self):
+    def printDescription(self):
         print( "You see a " + self.name + ". " + self.description)

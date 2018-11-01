@@ -11,8 +11,9 @@ class transition:
         self.onSuccess = None
         self.onFailure = None
         self.description = description
+        self.detailedDescription = None
         self.onSuccessScripts = []
         self.onFailureScripts = []
 
-    def printTrans(self):
+    def printDescription(self):
         print( "You see a " + self.name + ". " + self.description + " It seems to lead "+ self.direction)

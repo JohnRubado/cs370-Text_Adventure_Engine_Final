@@ -4,7 +4,6 @@ from packages.area.area import Area
 
 class player:
 
-
     def __init__(self, name="Player", description="",inventory=[]):
         self.description = description
         self.currentArea = None;
@@ -30,11 +29,15 @@ class player:
                     else:
                         print(item.onSuccess)
                     area1.removeItem(item)
+                    for script in item.onSuccessScripts:
+                        script()
                 else:
                     if item.onFailure == None:
                         print("You cannot take the " + targetItem)
                     else:
                         print(item.onFailure)
+                    for script in item.onFailureScripts:
+                        script()
                 return
 
         print "There is no " + targetItem

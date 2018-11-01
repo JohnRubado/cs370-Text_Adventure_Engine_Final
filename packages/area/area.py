@@ -27,9 +27,9 @@ class Area:
         print("You are in the " +self.name + ". " + self.description)
 
         for transition in self.transitions:
-            transition.printTrans()
+            transition.printDescription()
         for item in self.items:
-            item.printItem()
+            item.printDescription()
 
     def removeItem(self, item):
         item.area = None
