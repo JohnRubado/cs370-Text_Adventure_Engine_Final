@@ -191,7 +191,7 @@ def saveLoadTests():
     ########################################################################################
     testWorld.loadGame("brokensave.txt", True)
     ########################################################################################
-    print "SUCCESS - Now the test will add items to the world and players inventory and tests for equality of saves."
+    print "SUCCESS - Now the test will add items to the world, player will pick up 2 items, move to a new area, drop 1 item,  and test for equality of saves."
 
     itemOne = testWorld.newItem("itemOne","one", "Woods", True)
     itemTwo = testWorld.newItem("itemTwo", "two", "Woods", False)
@@ -200,12 +200,13 @@ def saveLoadTests():
     testWorld.newItem("itemFive", "five", "Pond", True)
     testWorld.newItem("itemSix", "six", "Pond", False)
     testWorld.pickUpItem("itemFive")
-
+    testWorld.pickUpItem("itemThree")
 
     testWorld.movePlayer("east")
-
+    testWorld.dropItem("itemThree")
 
     testWorld.saveProgress()
+    
     firstSave = open("./Johnny.txt", "r")
     firstSave = firstSave.read()
 

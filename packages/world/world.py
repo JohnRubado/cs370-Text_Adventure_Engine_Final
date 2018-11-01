@@ -362,7 +362,6 @@ class World:
         self.name = data["name"]
         self.description = data["description"]
 
-
         #make all areas
         for area in data["areas"]:
             self.newArea(area["name"],area["description"])
@@ -407,7 +406,6 @@ class World:
                 for script in itemMap["onFailureScripts"]:
                     currScript = pickle.loads(script["script"])
                     newItem.onFailureScripts.append(currScript)
-
 
         #Loading the inventory
         for itemMap in data["player"]["inventory"]:

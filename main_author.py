@@ -27,8 +27,7 @@ def fallPicture():
     image = Image.open("./pictures/fallPic.png")
     image.show()
 
-def swordScript():
-    print "HELLO"
+
 
 
 
