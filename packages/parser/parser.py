@@ -18,14 +18,15 @@ class parser:
             userInput = raw_input()
             print "";
             userInput = userInput.lower().split()
-            moveKeywords = ["move","go", "follow"]
+            moveKeywords = ["move","go", "follow", "use"]
             lookKeywords = ["look", "show"]
             quitWords = ["quit"]
             helpWords = ["help"]
             takeWords = ["take", "pick"]
             dropWords = ["drop"]
+            useWords = ["use"]
             inventoryWords = ["inventory"]
-            noiseWords = ["at", "am", "here", "there", "to", "up","through"]
+            noiseWords = ["at", "am", "here", "there", "to", "up","through", "on"]
 
             if len(userInput) == 0:
                 continue
@@ -34,7 +35,16 @@ class parser:
                 if word in userInput:
                     userInput.remove(word)
 
-            if userInput[0] in moveKeywords:
+            if userInput[0] in useWords:
+                if len(userInput) == 3:
+                    name = userInput[1]
+                    target = userInput[2]
+                    self.world.useItem(name,target)
+                elif len(userInput) == 2:
+                    argument = ' '.join(userInput[1:])
+                    self.world.movePlayer(argument)
+
+            elif userInput[0] in moveKeywords:
                 argument = ' '.join(userInput[1:])
                 self.world.movePlayer(argument)
 

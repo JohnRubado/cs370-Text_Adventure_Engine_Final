@@ -27,7 +27,15 @@ class Area:
         print("You are in the " +self.name + ". " + self.description)
 
         for transition in self.transitions:
-            transition.printDescription()
+
+            #if the transition is blocked....
+            if len(transition.requirements) >= 1:
+                transition.printDescription()
+            else:
+                if transition.openedDescription != None:
+                    transition.printOpenedDescription()
+                else:
+                    transition.printDescription()
         for item in self.items:
             item.printDescription()
 

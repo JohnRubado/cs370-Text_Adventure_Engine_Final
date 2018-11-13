@@ -42,9 +42,13 @@ class World:
                         "moveable": item.moveable,
                         "onSuccess": item.onSuccess,
                         "onFailure": item.onFailure,
+                        "detailedDescription": item.detailedDescription,
                         "onSuccessScripts": [],
-                        "onFailureScripts": []
+                        "onFailureScripts": [],
+                        "onUse": item.onUse,
+                        "onUseScripts": []
                         }
+            #saving item scripts for items in players inventory
             for script in item.onSuccessScripts:
                 serScript = pickle.dumps(script)
                 currScript = {"script": serScript}
@@ -53,6 +57,11 @@ class World:
                 serScript = pickle.dumps(script)
                 currScript = {"script": serScript}
                 currItem["onFailureScripts"].append(currScript)
+            for script in item.onUseScripts:
+                serScript = pickle.dumps(script)
+                currScript = {"script": serScript}
+                currItem["onUseScripts"].append(currScript)
+
             world["player"]["inventory"].append(currItem)
 
         #save all the areas their transitions, and their items.
@@ -71,8 +80,12 @@ class World:
                 "area": transition.area.name,
                 "description":transition.description,
                 "detailedDescription":transition.detailedDescription,
+                "openedDescription": transition.openedDescription,
                 "onSuccessScripts": [],
-                "onFailureScripts": []}
+                "onFailureScripts": [],
+                "onOpenScripts": [],
+                "requirements": []}
+
                 #serializing scripts with pickle.
                 for script in transition.onSuccessScripts:
                     serScript = pickle.dumps(script)
@@ -80,8 +93,19 @@ class World:
                     currTransition["onSuccessScripts"].append(currScript)
                 for script in transition.onFailureScripts:
                     serScript = pickle.dumps(script)
-                    currScript = {"script": script}
+                    currScript = {"script": serScript}
                     currTransition["onFailureScripts"].append(currScript)
+                for script in transition.onOpenScripts:
+                    serScript = pickle.dumps(script)
+                    currScript = {"script": serScript}
+                    currTransition["onOpenScripts"].append(currScript)
+
+                #saving transition requirements
+                for requirement in transition.requirements:
+                    currRequirement = {"requirement": requirement}
+                    currTransition["requirements"].append(currRequirement)
+
+
                 currArea["transitions"].append(currTransition)
             for item in area.items:
                 currItem = {"name":item.name,
@@ -92,7 +116,9 @@ class World:
                             "onSuccess": item.onSuccess,
                             "onFailure": item.onFailure,
                             "onSuccessScripts": [],
-                            "onFailureScripts": [],}
+                            "onFailureScripts": [],
+                            "onUse": item.onUse,
+                            "onUseScripts": []}
                 for script in item.onSuccessScripts:
                     serScript = pickle.dumps(script)
                     currScript = {"script": serScript}
@@ -101,6 +127,10 @@ class World:
                     serScript = pickle.dumps(script)
                     currScript = {"script": serScript}
                     currItem["onFailureScripts"].append(currScript)
+                for script in item.onUseScripts:
+                    serScript = pickle.dumps(script)
+                    currScript = {"script": serScript}
+                    currItem["onUseScripts"].append(currScript)
 
                 currArea["items"].append(currItem)
             world["areas"].append(currArea)
@@ -147,7 +177,41 @@ class World:
         area = self.player.currentArea
         self.player.addToInventory(item)
 
+    def useItem(self, itemName, transitionName):
+        #check to see if transition exists.
+        transExists,transition = self.validTransition(transitionName,self.player.currentArea)
+        itemUsed = False
+        hasItem = False
+        if transExists:
 
+
+            #check to see if player has item
+            for item in self.player.inventory:
+                if itemName == item.name:
+                    hasItem = True
+                    #check to see if item is a requirement
+                    for requirement in transition.requirements:
+                        if requirement == item.name:
+                            itemUsed = True
+                            transition.requirements.remove(requirement)
+                            print item.onUse
+
+                            for script in item.onUseScripts:
+                                script()
+                            for script in transition.onOpenScripts:
+                                script()
+
+            if hasItem == False:
+                print "You do not have a " + itemName
+            else:
+                if itemUsed == False:
+                    print transitionName + " does not require a " + itemName
+
+
+
+
+        else:
+            print "There is no " + transitionName
 
 
     def checkInventory(self):
@@ -232,14 +296,14 @@ class World:
                     if player.currentArea.name == area.name and playerMoved == False:
                         if self.validRoute(area,target)[0]:
                             transition = self.validRoute(area,target)[1]
-                            if transition.isPassable:
+                            if transition.isPassable and transition.requirements == []:
                                 player.currentArea = transition.destination
                                 playerMoved = True
                         else:
                             print "There is no route that leads " + target
             elif self.validTransition(target,player.currentArea)[0]:
                             transition = self.validTransition(target,player.currentArea)[1]
-                            if transition.isPassable:
+                            if transition.isPassable and transition.requirements == []:
 
                                 player.currentArea = transition.destination
                                 playerMoved = True
@@ -248,7 +312,7 @@ class World:
 
             if playerMoved:
                 if transition.onSuccess == None:
-                    print "You use the " + transition.name + " that leads " + transition.direction
+                    print "You use the " + transition.name + " that leads " + transition.direction.lower()
                 else:
                     print transition.onSuccess
 
@@ -301,7 +365,7 @@ class World:
             if target == "":
                 self.player.currentArea.printArea()
             elif target == "me":
-                self.player.printplayer()
+                self.player.printPlayer()
             elif isItem:
                 if theItem.detailedDescription == None:
                     theItem.printDescription()
@@ -355,9 +419,6 @@ class World:
         self.areas = []
         self.player = player(data["player"]["name"],data["player"]["description"], [])
 
-        self.name = data["name"]
-        self.description = data["description"]
-
         #set world properties
         self.name = data["name"]
         self.description = data["description"]
@@ -378,17 +439,25 @@ class World:
                 newTrans = transition(transitionMap["name"],self.getArea(transitionMap["area"]),transitionMap["direction"],self.getArea(transitionMap["destination"]), transitionMap["isPassable"],transitionMap["description"])
                 newTrans.onSuccesScripts = []
                 newTrans.onFailureScripts = []
+                newTrans.requirements = []
                 newTrans.onSuccess = transitionMap["onSuccess"]
                 newTrans.onFailure = transitionMap["onFailure"]
+                newTrans.openedDescription = transitionMap["openedDescription"]
                 newTrans.detailedDescription = transitionMap["detailedDescription"]
 
                 for script in transitionMap["onSuccessScripts"]:
                     currScript = pickle.loads(script["script"])
                     newTrans.onSuccessScripts.append(currScript)
-
                 for script in transitionMap["onFailureScripts"]:
                     currScript = pickle.loads(script["script"])
                     newTrans.onSuccessScripts.append(currScript)
+                for script in transitionMap["onOpenScripts"]:
+                    currScript = pickle.loads(script["script"])
+                    newTrans.onOpenScripts.append(currScript)
+
+
+                for requirement in transitionMap["requirements"]:
+                    newTrans.requirements.append(requirement["requirement"])
 
                 newTrans.area.transitions.append(newTrans)
 
@@ -397,6 +466,7 @@ class World:
                 newItem = self.newItem(itemMap["name"], itemMap["description"], area["name"], itemMap["moveable"])
                 newItem.onSuccess = itemMap["onSuccess"]
                 newItem.onFailure = itemMap["onFailure"]
+                newItem.onUse = itemMap["onUse"]
                 newItem.detailedDescription = itemMap["detailedDescription"]
 
                 #loading scripts for area items
@@ -406,18 +476,25 @@ class World:
                 for script in itemMap["onFailureScripts"]:
                     currScript = pickle.loads(script["script"])
                     newItem.onFailureScripts.append(currScript)
+                for script in itemMap["onUseScripts"]:
+                    currScript = pickle.loads(script["script"])
+                    newItem.onUseScripts.append(currScript)
 
         #Loading the inventory
         for itemMap in data["player"]["inventory"]:
             newItem = item(itemMap["name"], itemMap["description"], None, itemMap["moveable"])
             newItem.onSuccess = itemMap["onSuccess"]
             newItem.onFailure = itemMap["onFailure"]
+            newItem.onUse = itemMap["onUse"]
             for script in itemMap["onSuccessScripts"]:
                 currScript = pickle.loads(script["script"])
                 newItem.onSuccessScripts.append(currScript)
             for script in itemMap["onFailureScripts"]:
                 currScript = pickle.loads(script["script"])
                 newItem.onFailureScripts.append(currScript)
+            for script in itemMap["onUseScripts"]:
+                currScript = pickle.loads(script["script"])
+                newItem.onUseScripts.append(currScript)
             self.player.inventory.append(newItem)
 
 
@@ -449,12 +526,13 @@ class World:
         return False, None
 
     #Searches the given area for the given transition
-    #Returns True if transition is found False otherwisee
+    #Returns True and object if transition is found False otherwisee
     def validTransition(self, name, area):
         for transition in area.transitions:
              if name == transition.name:
                 return True, transition
         return False, None;
+
 
     #Searches for the name of the area in the list of areas (self.areas) in the world.
     #Returns area object once found.
@@ -506,7 +584,6 @@ class World:
     #trims all spaces from direction string and casts it to lower case
     #returns the result string
     def trimDirectionString(self, direction):
-        direction = direction.lower()
         return "".join(direction.split())
 
     def printWorld(self):

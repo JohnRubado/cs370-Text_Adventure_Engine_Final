@@ -10,7 +10,8 @@ class item:
         self.onFailure = None
         self.onSuccessScripts = []
         self.onFailureScripts = []
-
+        self.onUseScripts = []
+        self.onUse = None
 
     def printDescription(self):
         print( "You see a " + self.name + ". " + self.description)

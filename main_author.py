@@ -23,12 +23,13 @@ def pathScript():
     walking = mixer.Sound("./sounds/walking.wav")
     walking.play()
 
+def swordScript():
+    sword = mixer.Sound("./sounds/sword.wav")
+    sword.play()
+
 def fallPicture():
     image = Image.open("./pictures/fallPic.png")
     image.show()
-
-
-
 
 
 # TODO:
@@ -54,15 +55,25 @@ cave = myWorld.newArea("cave", "Its dark and wet")
 
 #CREATE SOME TRANSITIONS
 
-inPath, outPath = myWorld.newTransition("path",["quarry", "west"], ["woods", "north"], True, "Its covered with giant boulders.")
-inCavern, outCavern = myWorld.newTransition("cavern",["woods", "east"], ["cave", "west"], False, "Its narrow and dark inside, I wonder where it leads?")
+inPath, outPath = myWorld.newTransition("path",["quarry", "west"], ["woods", "north"], True, "Its covered with giant boulders. I can't get by.")
+inCavern, outCavern = myWorld.newTransition("cavern",["woods", "east"], ["cave", "west"], False, "Its narrow and dark inside and a rock is blocking my way, I wonder where it leads?")
 inWaterfall, outWaterfall = myWorld.newTransition("waterfall",["cave", "north"], ["quarry", "south"], False, "Its flowing very fast.")
 
 #SETTING SOME SCRIPTS TO BE EXECUTED
 inWaterfall.onSuccessScripts.append(fallScript)
 inWaterfall.onSuccessScripts.append(fallPicture)
 inPath.onSuccessScripts.append(pathScript)
+inPath.onFailure = "You can't use the path, it is blocked by large boulders."
+inPath.openedDescription = "It is covered with many small rocks."
 outPath.onSuccessScripts.append(pathScript)
+outPath.description = "It is covered with many small rocks."
+inCavern.openedDescription = "Its narrow and dark inside and I can barely fit through. I wonder where it leads."
+
+#SETTING SOME TRANSITION requirements
+inPath.requirements.append("pickaxe")
+inCavern.requirements.append("pickaxe")
+
+
 
 #SET MESSAGES TO BE DISPLAYED ON SUCCESS OR FAILURE
 inCavern.onSuccess = "You slide down the narrow cavern. You definitely can't get back out"
@@ -82,6 +93,12 @@ sword = myWorld.newItem("sword", "A dull longsword", "quarry")
 sword.onSuccess = "You take the sword, its a bit dull but it should do the job."
 sword.detailedDescription = "As you look closely, you see old dried blood along the edge."
 sword.onSuccessScripts.append(swordScript)
+
+pickaxe = myWorld.newItem("pickaxe", "A hefty pickaxe.", "quarry")
+pickaxe.onUse = "You swing the pickaxe with all your might. The way is cleared."
+
+
+
 pie = myWorld.newItem("pie", "A warm pie, I wonder who made it?", "woods")
 pie.detailedDescription = "A closer look reveals that the ants must have found it first.."
 
