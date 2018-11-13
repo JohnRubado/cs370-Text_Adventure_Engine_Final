@@ -36,10 +36,11 @@ class parser:
                     userInput.remove(word)
 
             if userInput[0] in useWords:
-                if len(userInput) == 3:
+
+                if len(userInput) >= 3:
+                    argument = ' '.join(userInput[2:])
                     name = userInput[1]
-                    target = userInput[2]
-                    self.world.useItem(name,target)
+                    self.world.useItem(name,argument)
                 elif len(userInput) == 2:
                     argument = ' '.join(userInput[1:])
                     self.world.movePlayer(argument)

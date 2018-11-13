@@ -207,11 +207,8 @@ class World:
                 if itemUsed == False:
                     print transitionName + " does not require a " + itemName
 
-
-
-
         else:
-            print "There is no " + transitionName
+            print "There is no " + transitionName + " that " + itemName + " can be used on."
 
 
     def checkInventory(self):
