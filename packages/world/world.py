@@ -32,6 +32,8 @@ class World:
         "player": {"name": self.player.name,
         "description":self.player.description,
         "currentArea":self.player.currentArea.name,
+        "health": self.player.health,
+        "score":self.player.score,
         "inventory":[]}}
 
         #save items in players inventory
@@ -194,12 +196,14 @@ class World:
                         if requirement == item.name:
                             itemUsed = True
                             transition.requirements.remove(requirement)
-                            print item.onUse
+                            if item.onUse != None:
+                                print item.onUse
 
                             for script in item.onUseScripts:
                                 script()
-                            for script in transition.onOpenScripts:
-                                script()
+                            if len(transition.requirements) == 0:
+                                for script in transition.onOpenScripts:
+                                    script()
 
             if hasItem == False:
                 print "You do not have a " + itemName
@@ -208,7 +212,7 @@ class World:
                     print transitionName + " does not require a " + itemName
 
         else:
-            print "There is no " + transitionName + " that " + itemName + " can be used on."
+            print "You cannot use " + itemName + " on " + transitionName + "."
 
 
     def checkInventory(self):
@@ -429,6 +433,8 @@ class World:
         self.player.name = data["player"]["name"]
         self.player.description = data["player"]["description"]
         self.player.currentArea = self.getArea(data["player"]["currentArea"])
+        self.player.health = data["player"]["health"]
+        self.player.score = data["player"]["score"]
 
         #with the area objects we can now make the desired transitions, and items
         for area in data["areas"]:
@@ -530,6 +536,24 @@ class World:
                 return True, transition
         return False, None;
 
+    def printScore(self):
+        print "You have " + str(self.player.score) + " points."
+
+    def printHealth(self):
+        print "You have " + str(self.player.health) + " health."
+
+
+    #returns the desired transition
+    def getTransition(self,name,area):
+        area = self.getArea(area)
+        for transition in area.transitions:
+             if name == transition.name:
+                return transition
+
+
+    #returns the player object
+    def getPlayer(self):
+        return self.player
 
     #Searches for the name of the area in the list of areas (self.areas) in the world.
     #Returns area object once found.

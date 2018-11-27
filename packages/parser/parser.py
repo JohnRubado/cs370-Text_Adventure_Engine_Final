@@ -75,7 +75,10 @@ class parser:
             elif userInput[0] in helpWords:
                 argument = ' '.join(userInput[1:])
                 self.world.helpUser()
-
+            elif userInput[0] == "health":
+                self.world.printHealth()
+            elif userInput[0] == "score":
+                self.world.printScore()
             elif userInput[0] == "save":
                 self.world.saveProgress()
             elif userInput[0] == "load":

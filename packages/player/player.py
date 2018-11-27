@@ -9,10 +9,17 @@ class player:
         self.currentArea = None;
         self.name = name
         self.inventory = inventory
+        self.health = 100
+        self.score = 0
 
 
     def printPlayer(self):
         print "You are " + self.name + ". " + self.description
+
+    def removeFromInventory(self,name):
+            for item in self.inventory:
+                if name == item.name:
+                    self.inventory.remove(item)
 
     def addToInventory(self, targetItem):
         area1 = self.currentArea

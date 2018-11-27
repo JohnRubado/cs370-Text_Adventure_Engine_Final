@@ -1,4 +1,13 @@
 Document all progress on any feature relative to the project here.
-AREA class
-  -class variables
-    -transitions()
+
+
+IMPORT NOTE:
+
+EMBEDDED SCRIPTING:
+
+You may attach scripts that can execute external processes. Or you may use a script to alter the world or the player in some way. This latter provides
+you with the ability to define specific end game constraints that best fit your story.
+
+If you plan to use a script to dynamically alter the world during play, you must use the getters for each object
+provided. If you do not do this, your changes will not carry through if the game is saved and loaded.
+An example of this is shown in the "caveWaterfallScript" function in the example author file.
