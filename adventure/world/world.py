@@ -1,8 +1,8 @@
-from packages.area.area import Area
-from packages.transition.transition import transition
-from packages.player.player import player
-from packages.parser.parser import parser
-from packages.item.item import item
+from adventure.area.area import Area
+from adventure.transition.transition import transition
+from adventure.player.player import player
+from adventure.parser.parser import parser
+from adventure.item.item import item
 import json
 import time
 import sys
@@ -185,8 +185,6 @@ class World:
         itemUsed = False
         hasItem = False
         if transExists:
-
-
             #check to see if player has item
             for item in self.player.inventory:
                 if itemName == item.name:
@@ -196,11 +194,15 @@ class World:
                         if requirement == item.name:
                             itemUsed = True
                             transition.requirements.remove(requirement)
+
                             if item.onUse != None:
                                 print item.onUse
+                            else:
+                                print "You use the " + itemName + "."
 
                             for script in item.onUseScripts:
                                 script()
+
                             if len(transition.requirements) == 0:
                                 for script in transition.onOpenScripts:
                                     script()
@@ -212,7 +214,7 @@ class World:
                     print transitionName + " does not require a " + itemName
 
         else:
-            print "You cannot use " + itemName + " on " + transitionName + "."
+            print "There is no " + transitionName
 
 
     def checkInventory(self):

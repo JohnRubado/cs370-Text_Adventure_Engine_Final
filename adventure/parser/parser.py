@@ -26,7 +26,7 @@ class parser:
             dropWords = ["drop"]
             useWords = ["use"]
             inventoryWords = ["inventory"]
-            noiseWords = ["at", "am", "here", "there", "to","through", "on"]
+            noiseWords = ["at", "am", "here", "there", "to","through", "on", "up"]
 
             if len(userInput) == 0:
                 continue

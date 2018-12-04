@@ -1,4 +1,4 @@
-from packages.item.item import item
+from adventure.item.item import item
 
 class Area:
 

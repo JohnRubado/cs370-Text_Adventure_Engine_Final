@@ -1,4 +1,4 @@
-from packages.world.world import *;
+from adventure import *;
 import os
 import time as t
 
@@ -9,14 +9,11 @@ from PIL import Image
 if os.path.dirname(__file__) != "":
     os.chdir(os.path.dirname(__file__))
 
-
 mixer.init()
-
 
 def waterfallScript():
     cave = mixer.Sound("./sounds/waterfall.wav")
     cave.play()
-
 
 def pathScript():
     walking = mixer.Sound("./sounds/walking.wav")
@@ -29,7 +26,6 @@ def swordScript():
 def fallPicture():
     image = Image.open("./pictures/fallPic.png")
     image.show()
-
 
 
 #this script dynamically updates the players health.
@@ -68,6 +64,7 @@ def endGameScript():
         myWorld.quitGame()
     if answer.strip() == "no":
         print "Fair enough. Enjoy the rest of eternity on this beach."
+
 
 #This is an example script that updates the world dynamically during play.
 #This one specifically updates the waterfall that is inside the cave, so that when the user places a ladder

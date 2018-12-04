@@ -1,5 +1,5 @@
-from packages.item.item import item
-from packages.area.area import Area
+from adventure.item.item import item
+from adventure.area.area import Area
 
 
 class player:
