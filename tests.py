@@ -1,4 +1,4 @@
-from packages.world.world import *;
+from adventure.world.world import *;
 
 #this test will create a world with some areas and print the world to see if they were created with the correct
 #names and descriptions
@@ -303,6 +303,7 @@ def saveLoadTests():
     print "#################################### END saveLoadTests ####################################"
 
 #Inventory test will test inventory functionality with embedded item script functionality.
+#It has been extended to include tests for the use item feature.
 def inventoryTests():
 
     def scriptOne():
@@ -352,6 +353,45 @@ def inventoryTests():
     testWorld.movePlayer("path1")
     testWorld.pickUpItem("itemOne")
     testWorld.dropItem("itemOne")
+
+    testWorld.movePlayer("path1")
+    testWorld.pickUpItem("itemOne")
+
+
+
+
+    #Attempt to use item on a non existing transition
+    #Expect error message - there is no river
+    print "Test attempting use an item on a transition that does not exist. Expect error message - there is no river"
+    testWorld.useItem("itemOne","river")
+
+    #Attempt to use item on a existing transition that does not require the item
+    #Expect error message - there is no river
+    print "Test attempting to use an item on existing transition that does not require the item. Expect error message - path1 does not require a itemOne "
+    testWorld.useItem("itemOne","path1")
+
+    #Attempt to use item that the player does not have on a transition that requires it.
+    #Expect error messaage - You do not have a itemTwo
+    print "Test attempting to use an item that the player does not have on a transition that requires it. Expect error messaage - You do not have a itemTwo "
+    testWorld.useItem("itemTwo","path1")
+
+    inPath1.requirements.append("itemOne")
+
+    #Attempt to move player through a blocked transition.
+    #Expect error message - You cannot traverse the path1
+    print "Test attempting to move player through blocked transition. Expect error message - You cannot traverse the path1"
+    testWorld.movePlayer("path1")
+
+    #Attempt to use a required item on the transition.
+    #Expect success message - You use the item1
+    print "Test attempting to use item you do have on a transition that requires it. Expect success message - You use the item1"
+    testWorld.useItem("itemOne","path1")
+
+    #Attempt to move player through cleared transition
+    # Expect success message - You use the path1 that leads north
+    print "Test attempting to move player through now cleared transition. Expect success message - You use the path1 that leads north"
+    testWorld.movePlayer("path1")
+
 
 
 

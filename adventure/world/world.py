@@ -391,8 +391,27 @@ class World:
 
     #A method that gives user a help menu when they type out "help"
     def helpUser(self):
-        print "To quit the game, simply type 'quit'"
-        print "To save or load type, 'save' or 'load [filename]'"
+
+        print "Singular commands:"
+        print "\tquit"
+        print "\tsave"
+        print "\tscore"
+        print "\thealth"
+        print "\tinventory"
+        print "\tload [playerName.txt]"
+        print "For item interaction use the following commands:"
+        print "\ttake [itemName] or pick up [itemName] eg. take sword"
+        print "\tuse [itemName] on [transitionName] eg. use pickaxe on path"
+        print "\tdrop [itemName]"
+        print "For viewing: "
+        print "\tlook"
+        print "\tlook at [transitionName or itemName or me]"
+        print "For moving:"
+        print "\tmove/go/follow/use [transitionName]"
+
+
+
+
     #method will be called when a player enters an area
     #it just displays the area they are in and the description of the area.
     def displayAreaDescription(self):
