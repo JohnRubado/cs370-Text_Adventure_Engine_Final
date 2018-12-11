@@ -6,21 +6,29 @@ import time as t
 from pygame import *
 from PIL import Image
 
-if os.path.dirname(__file__) != "":
-    os.chdir(os.path.dirname(__file__))
+
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
+    return os.path.join(base_path, relative_path)
+
+
 
 mixer.init()
 
 def waterfallScript():
-    cave = mixer.Sound("./sounds/waterfall.wav")
+    cave_path = resource_path("./sounds/waterfall.wav")
+    cave = mixer.Sound(cave_path)
     cave.play()
 
 def pathScript():
-    walking = mixer.Sound("./sounds/walking.wav")
+    walk_path = resource_path("./sounds/walking.wav")
+    walking = mixer.Sound(walk_path)
     walking.play()
 
 def swordScript():
-    sword = mixer.Sound("./sounds/sword.wav")
+    sword_path = resource_path("./sounds/sword.wav")
+    sword = mixer.Sound(sword_path)
     sword.play()
 
 
@@ -28,7 +36,8 @@ def swordScript():
 
 #this script dynamically updates the players health.
 def fallScript():
-    fall = mixer.Sound("./sounds/manfall.wav")
+    fall_path = resource_path("./sounds/manfall.wav")
+    fall = mixer.Sound(fall_path)
     fall.play()
     player = myWorld.getPlayer()
     player.health = player.health - 50
@@ -39,7 +48,8 @@ def fallScript():
         myWorld.quitGame()
 
 def wallcrackScript():
-    collapse = mixer.Sound("./sounds/wallcrack.wav")
+    collapse_path = resource_path("./sounds/wallcrack.wav")
+    collapse = mixer.Sound(collapse_path)
     collapse.play()
     print "THE CRACK OPENS AND THE CAVE BEGINS COLLAPSING. YOU NEARLY ESCAPE BY SLIDING THROUGH THE CRACK."
     myWorld.movePlayer("pedestal")
@@ -59,6 +69,7 @@ def endGameScript():
 
     if answer.strip() == "yes":
         print "You disintegrate into the 1's and 0's from which you were born. Free at last!!"
+        t.sleep(5)
         myWorld.quitGame()
     if answer.strip() == "no":
         print "Fair enough. Enjoy the rest of eternity on this beach."
@@ -130,7 +141,7 @@ inCavern.detailedDescription = "You see a lot of rat poop."
 outCavern.onFailure = "You try, but its too steep"
 outCavern.description = "The light is beaming in from above, there must be another way out."
 inPedestal.detailedDescription = "As you look closely, you see an ancient inscription, it reads 'THE BEARER OF PIE SHALL ACQUIRE THE TREASURE OF KAI' "
-outWaterfall.detailedDescription = "You step behind the waterfall, above you is a cave entrance. You can't reach it."
+outWaterfall.detailedDescription = "The waterfall is emerging from a cave, you cannot reach it."
 
 
 inWaterfall.onSuccess = "You wake up gasping for air. You must have fallen out of the waterfall and hit your head."
