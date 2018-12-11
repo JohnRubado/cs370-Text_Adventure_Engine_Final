@@ -31,9 +31,6 @@ def swordScript():
     sword = mixer.Sound(sword_path)
     sword.play()
 
-
-
-
 #this script dynamically updates the players health.
 def fallScript():
     fall_path = resource_path("./sounds/manfall.wav")

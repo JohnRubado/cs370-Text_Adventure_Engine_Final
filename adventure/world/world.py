@@ -3,11 +3,17 @@ from adventure.transition.transition import transition
 from adventure.player.player import player
 from adventure.parser.parser import parser
 from adventure.item.item import item
+import os
+import sys
 import json
 import time
 import sys
 import dill as pickle
 
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
+    return os.path.join(base_path, relative_path)
 
 
 class World:
@@ -24,7 +30,8 @@ class World:
 
     #Serializes all of the world into JSON format for later loading
     def saveProgress(self):
-        saveFile = open("./"+ self.player.name + ".txt", 'wb')
+        save_file = resource_path(self.player.name + ".txt")
+        saveFile = open(save_file, 'wb')
         print "Saving . . . "
         world = {"name": self.name,
         "description":self.description,
@@ -426,8 +433,8 @@ class World:
     #calling this method loads a previous game from the save file given. Save file
     #should have been constructed with pickle.
     def loadGame(self, fileName, testing = False):
-
-        #read world data from file
+        
+        fileName= resource_path(fileName)
         try:
             with open(fileName, "rb") as f:
                 data = pickle.load(f)
