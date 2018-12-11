@@ -1,15 +1,7 @@
 import os
-import sys
-
-def resource_path(relative_path):
-    """ Get absolute path to resource, works for dev and for PyInstaller """
-    base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
-    return os.path.join(base_path, relative_path)
-
 class parser:
     def __init__(self, world):
         self.world = world
-
 
     def start(self,isNew):
         if isNew:
@@ -91,8 +83,12 @@ class parser:
                 self.world.saveProgress()
             elif userInput[0] == "load":
                 if len(userInput) == 2:
-                    self.world.loadGame(userInput[1])
-
+                    loadFile = userInput[1]
+                    loadFile = "./" + loadFile.lower()
+                    if os.path.isfile(loadFile):
+                        self.world.loadGame(loadFile)
+                    else:
+                        print "File " + userInput[1] + " does not exist."
                 elif len(userInput) == 1:
                     print "Must provide file name to load"
             else:
