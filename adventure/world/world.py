@@ -30,7 +30,7 @@ class World:
 
     #Serializes all of the world into JSON format for later loading
     def saveProgress(self):
-        save_file = resource_path(self.player.name + ".txt")
+        save_file = resource_path(self.player.name.lower() + ".txt")
         saveFile = open(save_file, 'wb')
         print "Saving . . . "
         world = {"name": self.name,
@@ -433,8 +433,8 @@ class World:
     #calling this method loads a previous game from the save file given. Save file
     #should have been constructed with pickle.
     def loadGame(self, fileName, testing = False):
-        
-        fileName= resource_path(fileName)
+
+        fileName = resource_path(fileName.lower())
         try:
             with open(fileName, "rb") as f:
                 data = pickle.load(f)
